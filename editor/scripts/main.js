@@ -50,6 +50,10 @@ function newProjectIinit() {
     new library.Thumb('MIDI');
 }
 
-
-
 newProjectIinit();
+
+thumb_container_line.addEventListener('mousedown', (event) => {
+    if(event.target.classList.value === 'track-thumb-container-line' && event.button === 2) {
+        console.log('Hello');
+    };
+})

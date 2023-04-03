@@ -29,7 +29,12 @@ export default class ThumbSelect {
                     this.menu.remove();
                 }
             });
-        }, 100) 
+        }, 100);
+
+        this.remove_button.addEventListener('click', e => {
+            this.menu.remove();
+            thumb.remove();
+        })
         
         this.name_button.addEventListener('click', e => {
 

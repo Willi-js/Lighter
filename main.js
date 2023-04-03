@@ -49,7 +49,6 @@ function loadPreferenceWindow() {
     })
  
     preferenceWindow.loadFile(path.join(__dirname, './preferenceWindow/index.html'));
-    console.log('Hi');
 }
 
 const editormenu = Menu.buildFromTemplate([
@@ -65,7 +64,7 @@ const editormenu = Menu.buildFromTemplate([
                 label: 'Preferences',
                 click: () => loadPreferenceWindow(),
                 accelerator: 'CmdOrCtrl+P'
-            }
+            },
         ]
     }
 ]);

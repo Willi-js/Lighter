@@ -15,6 +15,7 @@ body, html {
 
 body {
     background-color: rgb(30, 30, 30);
+    overflow: hidden;
 }
 
 .container {
