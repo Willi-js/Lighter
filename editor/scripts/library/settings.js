@@ -31,4 +31,8 @@ export default class Settings {
         mainFile.states.settingsOn = false;
         this.settings.remove();
     }
+
+    updateTitle(name) {
+        this.title.textContent = name;
+    }
 }

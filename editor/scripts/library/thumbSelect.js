@@ -1,7 +1,7 @@
 import mainFile from "../main.js";
 
 export default class ThumbSelect {
-    constructor(thumb, mX, mY) {
+    constructor(thumb, mX, mY, settings) {
         this.menu = document.createElement('div');
         document.body.append(this.menu);
         this.menu.classList = 'menu';
@@ -47,12 +47,12 @@ export default class ThumbSelect {
             container.append(input);
             input.value = thumb.name;
             input.classList = 'input-name';
-            input.maxLength = 12;
+            input.maxLength = 11;
             input.placeholder = 'select a new track name';
 
             const text = document.createElement('p');
             container.append(text);
-            text.textContent = 'max char 12';
+            text.textContent = 'max char 11';
             text.classList = 'name-note';
 
             const submit_button = document.createElement('button');
@@ -71,6 +71,9 @@ export default class ThumbSelect {
 
             submit_button.addEventListener('click', () => {
                 thumb.updateTitle(input.value);
+                try {
+                    settings.updateTitle(input.value);
+                } catch {}
                 newInputWindow.remove();
             });
 
@@ -79,6 +82,9 @@ export default class ThumbSelect {
 
                 if(key === 'enter') {
                     thumb.updateTitle(input.value);
+                    try {
+                        settings.updateTitle(input.value);
+                    } catch {}
                     newInputWindow.remove();
                 }
                 

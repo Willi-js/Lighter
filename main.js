@@ -54,7 +54,7 @@ function loadPreferenceWindow() {
 
 const editormenu = Menu.buildFromTemplate([
     {
-        label: 'File',
+        label: 'Lighter',
         submenu: [
             {
                 label: 'Quit',
@@ -62,7 +62,7 @@ const editormenu = Menu.buildFromTemplate([
                 accelerator: 'CmdOrCtrl+Q'
             },
             {
-                label: 'preferences',
+                label: 'Preferences',
                 click: () => loadPreferenceWindow(),
                 accelerator: 'CmdOrCtrl+P'
             }

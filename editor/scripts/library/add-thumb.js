@@ -51,7 +51,7 @@ export default class Thumb {
                 mainFile.thumb_container.style.width = '900px';
                 mainFile.track_display.width = 'clac(100% - 900px)';
 
-                new Settings(this.name);
+                this.settings = new Settings(this.name);
 
             } else {
                 this.track_settings.style.rotate = '0deg';
@@ -65,7 +65,7 @@ export default class Thumb {
 
         this.object.addEventListener('mousedown', event => {
             if(event.button === 2) {
-                new ThumbSelect(this, event.clientX, event.clientY);
+                new ThumbSelect(this, event.clientX, event.clientY, this.settings);
             }
         })
     }
