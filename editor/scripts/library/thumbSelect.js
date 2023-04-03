@@ -25,15 +25,15 @@ export default class ThumbSelect {
 
         setTimeout(() => {
             document.addEventListener('mousedown', e => {
-                setTimeout(() => {
-                    if(e.target != this.menu) {
-                        this.menu.remove();
-                    }
-                }, 70);
+                if(e.target != this.menu && e.target != this.name_button && e.target != this.color_button && e.target != this.remove_button) {
+                    this.menu.remove();
+                }
             });
-        }, 10);
-
+        }, 100) 
+        
         this.name_button.addEventListener('click', e => {
+
+            this.menu.remove();
 
             const newInputWindow = document.createElement('div');
             document.body.append(newInputWindow);

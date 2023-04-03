@@ -13,7 +13,8 @@ var states = {
     track_settings_on_track: null,
     tracks_array: [],
     settingsOn: false,
-    settings: null
+    settings: null,
+    track_menu: null
 }
 
 var exports = {
