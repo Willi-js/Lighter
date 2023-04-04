@@ -9,7 +9,7 @@ import library from "./library/library.js";
 var states = {
     sidebar_extended: false,
     track_count: 0,
-    possibleColors: ['red', 'blue', 'aqua', 'limegreen'],
+    possibleColors: ['red', 'blue', 'aqua', 'limegreen', 'aquamarine', 'cadetblue', 'crimson', 'darkmagenta', 'darkorange'],
     track_settings_on_track: null,
     tracks_array: [],
     settingsOn: false,
@@ -54,6 +54,6 @@ newProjectIinit();
 
 thumb_container_line.addEventListener('mousedown', (event) => {
     if(event.target.classList.value === 'track-thumb-container-line' && event.button === 2) {
-        console.log('Hello');
+        new library.TrackThumbMenu(event.clientX, event.clientY);
     };
 })

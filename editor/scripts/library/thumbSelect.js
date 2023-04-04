@@ -1,4 +1,5 @@
 import mainFile from "../main.js";
+import library from "./library.js";
 
 export default class ThumbSelect {
     constructor(thumb, mX, mY, settings) {
@@ -23,13 +24,35 @@ export default class ThumbSelect {
         this.remove_button.classList = 'button';
         this.remove_button.textContent = 'remove track';
 
+        this.createAudio = document.createElement('button');
+        this.menu.append(this.createAudio);
+        this.createAudio.classList = 'button';
+        this.createAudio.textContent = 'insert audio';
+
+        this.createMIDI = document.createElement('button');
+        this.menu.append(this.createMIDI);
+        this.createMIDI.classList = 'button';
+        this.createMIDI.textContent = 'insert MIDI';
+
         setTimeout(() => {
             document.addEventListener('mousedown', e => {
-                if(e.target != this.menu && e.target != this.name_button && e.target != this.color_button && e.target != this.remove_button) {
+                if(e.target != this.menu && e.target != this.name_button && e.target != this.color_button && e.target != this.remove_button && e.target != this.createAudio && e.target != this.createMIDI) {
                     this.menu.remove();
                 }
             });
         }, 100);
+
+        this.createAudio.addEventListener('click', () => {
+            this.menu.remove();
+
+            new library.Thumb('audio');
+        });
+
+        this.createMIDI.addEventListener('click', () => {
+            this.menu.remove();
+
+            new library.Thumb('MIDI');
+        });
 
         this.remove_button.addEventListener('click', e => {
             this.menu.remove();

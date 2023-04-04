@@ -16,6 +16,7 @@ body, html {
 body {
     background-color: rgb(30, 30, 30);
     overflow: hidden;
+    user-select: none;
 }
 
 .container {
@@ -117,11 +118,14 @@ body {
 .track-thumb-container-line {
     width: 100px;
     height: 100%;
-    display: flex;
-    flex-direction: column;
     border-right: solid 1px rgb(90, 90, 90);
     border-top-right-radius: 5px;
     border-bottom-right-radius: 5px;
+    overflow: scroll;
+}
+
+.track-thumb-container-line::-webkit-scrollbar {
+    display: none;
 }
 
 .settings-bar {
@@ -152,7 +156,7 @@ body {
 .menu {
     position: absolute;
     width: 80px;
-    height: 60px;
+    height: 100px;
     background-color: rgb(70, 70, 70);
     z-index: 99;
     border-radius: 5px;
@@ -243,4 +247,13 @@ body {
     font-size: 12px;
     user-select: none;
     font-family: 'Poppins', sans-serif;
+}
+
+.track-thumb-menu {
+    position: absolute;
+    width: 80px;
+    height: 40px;
+    background-color: rgb(70, 70, 70);
+    z-index: 99;
+    border-radius: 5px;
 }
