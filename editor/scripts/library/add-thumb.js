@@ -65,7 +65,7 @@ export default class Thumb {
 
         this.object.addEventListener('mousedown', event => {
             if(event.button === 2) {
-                new ThumbSelect(this, event.clientX, event.clientY, this.settings);
+                new ThumbSelect(this);
             }
         })
     }

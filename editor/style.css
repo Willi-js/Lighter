@@ -74,11 +74,13 @@ body {
 }
 
 .track-thumb {
+    position: relative;
     width: 98px;
     height: 98px;
     border: solid 1px rgb(90, 90, 90);
     display: flex;
     flex-direction: column;
+    transition-duration: .2s;
 }
 
 .arrow-extend {
@@ -96,6 +98,8 @@ body {
     font-family: 'Poppins', sans-serif;
     user-select: none;
     font-weight: 800;
+    height: 40px;
+    width: 80px;
 }
 
 .button-container {
@@ -104,7 +108,7 @@ body {
     background-color: rgb(30, 30, 30);
     margin-left: 2.5px;
     border-radius: 5px;
-    margin-top: 40px;
+    margin-top: 20px;
     display: flex;
     justify-content: end;
 }
@@ -122,6 +126,9 @@ body {
     border-top-right-radius: 5px;
     border-bottom-right-radius: 5px;
     overflow: scroll;
+}
+.track-thumb-container-line div.track-thumb:last-child {
+    margin-bottom: 200px;
 }
 
 .track-thumb-container-line::-webkit-scrollbar {

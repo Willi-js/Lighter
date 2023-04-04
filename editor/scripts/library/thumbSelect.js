@@ -2,12 +2,13 @@ import mainFile from "../main.js";
 import library from "./library.js";
 
 export default class ThumbSelect {
-    constructor(thumb, mX, mY, settings) {
+    constructor(thumb) {
         this.menu = document.createElement('div');
-        document.body.append(this.menu);
+        //document.body.append(this.menu);
+        thumb.object.append(this.menu);
         this.menu.classList = 'menu';
-        this.menu.style.left = `${mX}px`;
-        this.menu.style.top = `${mY}px`;
+        this.menu.style.left = `${10}px`;
+        this.menu.style.top = `${20}px`;
 
         this.name_button = document.createElement('button');
         this.menu.append(this.name_button);
@@ -75,12 +76,12 @@ export default class ThumbSelect {
             container.append(input);
             input.value = thumb.name;
             input.classList = 'input-name';
-            input.maxLength = 11;
+            input.maxLength = 14;
             input.placeholder = 'select a new track name';
 
             const text = document.createElement('p');
             container.append(text);
-            text.textContent = 'max char 11';
+            text.textContent = 'max char 14';
             text.classList = 'name-note';
 
             const submit_button = document.createElement('button');
@@ -98,9 +99,14 @@ export default class ThumbSelect {
             });
 
             submit_button.addEventListener('click', () => {
-                thumb.updateTitle(input.value);
+                if(input.value != '' && input.value.trim() != '') {
+                    thumb.updateTitle(input.value);
+                } else {
+                    thumb.updateTitle(`${thumb.id} ${thumb.type}`);
+                }
+                
                 try {
-                    settings.updateTitle(input.value);
+                    thumb.settings.updateTitle(thumb.name);
                 } catch {}
                 newInputWindow.remove();
             });
@@ -109,9 +115,14 @@ export default class ThumbSelect {
                 var key = event.key.toLocaleLowerCase();
 
                 if(key === 'enter') {
-                    thumb.updateTitle(input.value);
+                    if(input.value != '' && input.value.trim() != '') {
+                        thumb.updateTitle(input.value);
+                    } else {
+                        thumb.updateTitle(`${thumb.id} ${thumb.type}`);
+                    }
+                    
                     try {
-                        settings.updateTitle(input.value);
+                        thumb.settings.updateTitle(thumb.name);
                     } catch {}
                     newInputWindow.remove();
                 }
