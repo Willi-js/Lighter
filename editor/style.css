@@ -71,13 +71,22 @@ body {
     height: 100%;
     border-top-left-radius: 5px;
     border-bottom-left-radius: 5px;
+    overflow: scroll;
+}
+
+.track-display div:last-child {
+    margin-bottom: 200px;
+}
+
+.track-display::-webkit-scrollbar {
+    display: none;
 }
 
 .track-thumb {
     position: relative;
     width: 98px;
     height: 98px;
-    border: solid 1px rgb(90, 90, 90);
+    border: solid 1px rgb(46, 46, 46);
     display: flex;
     flex-direction: column;
     transition-duration: .2s;
@@ -263,4 +272,11 @@ body {
     background-color: rgb(70, 70, 70);
     z-index: 99;
     border-radius: 5px;
+}
+
+.track {
+    width: 100%;
+    height: 99px;
+    background-color: rgb(85, 85, 85);
+    border-bottom: solid 1px rgb(46, 46, 46);
 }
