@@ -14,7 +14,8 @@ var states = {
     tracks_array: [],
     settingsOn: false,
     settings: null,
-    track_menu: null
+    track_menu: null,
+    scrollEl: null
 }
 
 var exports = {
@@ -48,6 +49,14 @@ function newProjectIinit() {
 
     new library.Thumb();
     new library.Thumb('MIDI');
+    new library.Thumb();
+    new library.Thumb('MIDI');
+    new library.Thumb();
+    new library.Thumb('MIDI');
+    new library.Thumb();
+    new library.Thumb('MIDI');
+    new library.Thumb();
+    new library.Thumb('MIDI');
 }
 
 newProjectIinit();
@@ -56,4 +65,24 @@ thumb_container_line.addEventListener('mousedown', (event) => {
     if(event.target.classList.value === 'track-thumb-container-line' && event.button === 2) {
         new library.TrackThumbMenu(event.clientX, event.clientY);
     };
-})
+});
+
+thumb_container_line.addEventListener('wheel', () => {
+    states.scrollEl = thumb_container_line;
+});
+
+track_display.addEventListener('wheel', () => {
+    states.scrollEl = track_display;
+});
+
+thumb_container_line.addEventListener('scroll', () => {
+    if(states.scrollEl === thumb_container_line) {
+        track_display.scrollTop = thumb_container_line.scrollTop;
+    }
+});
+
+track_display.addEventListener('scroll', () => {
+    if(states.scrollEl === track_display) {
+        thumb_container_line.scrollTop = track_display.scrollTop;
+    }
+});

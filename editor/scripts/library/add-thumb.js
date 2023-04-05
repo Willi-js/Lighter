@@ -67,7 +67,11 @@ export default class Thumb {
             if(event.button === 2) {
                 new ThumbSelect(this);
             }
-        })
+        });
+
+        this.track = document.createElement('div');
+        mainFile.track_display.append(this.track);
+        this.track.classList = 'track';
     }
 
     updateId() {
