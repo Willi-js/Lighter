@@ -24,7 +24,6 @@ export default class Settings {
         } else {
             mainFile.states.settings.title.textContent = name;
         }
-
     }
 
     remove() {
