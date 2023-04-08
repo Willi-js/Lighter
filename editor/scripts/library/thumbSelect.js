@@ -4,7 +4,6 @@ import library from "./library.js";
 export default class ThumbSelect {
     constructor(thumb) {
         this.menu = document.createElement('div');
-        //document.body.append(this.menu);
         thumb.object.append(this.menu);
         this.menu.classList = 'menu';
         this.menu.style.left = `${10}px`;
@@ -42,6 +41,47 @@ export default class ThumbSelect {
                 }
             });
         }, 100);
+
+        this.color_button.addEventListener('click', () => {
+
+            this.menu.remove();
+
+            const newInputWindow = document.createElement('div');
+            document.body.append(newInputWindow);
+            newInputWindow.classList = 'new-input-window';
+
+            const container = document.createElement('div');
+            newInputWindow.append(container);
+            container.classList = 'color-container';
+
+            const color_buttons_container = document.createElement('div');
+            container.append(color_buttons_container);
+            color_buttons_container.classList = 'color-button-container';
+
+            const close = document.createElement('img');
+            container.append(close);
+            close.src = '../assests/close.svg';
+            close.classList = 'close-name-change';
+
+            for(let i = 0;i<mainFile.states.possibleColors.length;i++) {
+                const color_button = document.createElement('button');
+                color_buttons_container.append(color_button);
+                color_button.style.backgroundColor = mainFile.states.possibleColors[i];
+                color_button.setAttribute('data-color', mainFile.states.possibleColors[i]);
+                color_button.classList = 'color-button';
+
+                color_button.addEventListener('click', () => {
+                    thumb.object.style.backgroundColor = color_button.getAttribute('data-color');
+
+                    newInputWindow.remove();
+                })
+            }
+
+            close.addEventListener('click', () => {
+                newInputWindow.remove();
+            });
+
+        });
 
         this.createAudio.addEventListener('click', () => {
             this.menu.remove();

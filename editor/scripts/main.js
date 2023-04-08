@@ -49,14 +49,6 @@ function newProjectIinit() {
 
     new library.Thumb();
     new library.Thumb('MIDI');
-    new library.Thumb();
-    new library.Thumb('MIDI');
-    new library.Thumb();
-    new library.Thumb('MIDI');
-    new library.Thumb();
-    new library.Thumb('MIDI');
-    new library.Thumb();
-    new library.Thumb('MIDI');
 }
 
 newProjectIinit();

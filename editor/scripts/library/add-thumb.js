@@ -85,7 +85,18 @@ export default class Thumb {
     }
 
     remove() {
+
         this.object.remove();
+        this.track.remove();
+
+        if(this.settingsOn) {
+            mainFile.states.settings.remove();
+            this.settingsOn = false;
+            mainFile.states.settingsOn = false;
+            mainFile.states.track_settings_on_track = null;
+            mainFile.states.settings = null;
+        }
+
         mainFile.states.tracks_array.splice(this.id, 1)
 
         mainFile.states.tracks_array.forEach(item => {
