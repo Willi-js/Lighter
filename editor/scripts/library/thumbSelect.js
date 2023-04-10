@@ -72,6 +72,8 @@ export default class ThumbSelect {
 
                 color_button.addEventListener('click', () => {
                     thumb.object.style.backgroundColor = color_button.getAttribute('data-color');
+                    thumb.background = color_button.getAttribute('data-color');
+                    thumb.object.setAtribute('data-color', color_button.getAttribute('data-color'));
 
                     newInputWindow.remove();
                 })

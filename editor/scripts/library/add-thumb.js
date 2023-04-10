@@ -13,6 +13,7 @@ export default class Thumb {
         this.id = mainFile.states.tracks_array.indexOf(this);
         this.type = type;
         this.background = mainFile.states.possibleColors[Math.floor(Math.random()*mainFile.states.possibleColors.length)];
+        this.object.setAttribute('data-color', this.background);
         this.name = `${this.id} ${type}`;
         
         mainFile.thumb_container_line.append(this.object);
@@ -72,6 +73,18 @@ export default class Thumb {
         this.track = document.createElement('div');
         mainFile.track_display.append(this.track);
         this.track.classList = 'track';
+
+        this.object.addEventListener('click', () => {
+            if(!mainFile.states.is_tack_selected) {
+                mainFile.states.is_tack_selected = true;
+                mainFile.states.selected_track = this.object;
+                this.object.style.backgroundColor = 'lightblue';
+            } else {
+                mainFile.states.selected_track.style.backgroundColor = mainFile.states.selected_track.getAttribute('data-color');
+                mainFile.states.selected_track = this.object;
+                this.object.style.backgroundColor = 'lightblue';
+            }
+        })
     }
 
     updateId() {
