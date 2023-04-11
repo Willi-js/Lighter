@@ -15,9 +15,7 @@ var states = {
     settingsOn: false,
     settings: null,
     track_menu: null,
-    scrollEl: null,
-    is_tack_selected: false,
-    selected_track: null
+    scrollEl: null
 }
 
 var exports = {
@@ -80,15 +78,3 @@ track_display.addEventListener('scroll', () => {
         thumb_container_line.scrollTop = track_display.scrollTop;
     }
 });
-
-thumb_container_line.addEventListener('click', e => {
-    setTimeout(() => {
-        console.log(e.target.classList);
-        if(states.is_tack_selected && !e.target.classList.contains('track-thumb')) {
-            console.log('hi');
-            states.is_tack_selected = false;
-            states.selected_track.style.backgroundColor = states.selected_track.getAttribute('data-color');
-            states.selected_track = null;
-        }
-    }, 100)
-})

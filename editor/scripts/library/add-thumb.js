@@ -73,18 +73,6 @@ export default class Thumb {
         this.track = document.createElement('div');
         mainFile.track_display.append(this.track);
         this.track.classList = 'track';
-
-        this.object.addEventListener('click', () => {
-            if(!mainFile.states.is_tack_selected) {
-                mainFile.states.is_tack_selected = true;
-                mainFile.states.selected_track = this.object;
-                this.object.style.backgroundColor = 'lightblue';
-            } else {
-                mainFile.states.selected_track.style.backgroundColor = mainFile.states.selected_track.getAttribute('data-color');
-                mainFile.states.selected_track = this.object;
-                this.object.style.backgroundColor = 'lightblue';
-            }
-        })
     }
 
     updateId() {
