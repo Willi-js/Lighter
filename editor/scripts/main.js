@@ -78,3 +78,9 @@ track_display.addEventListener('scroll', () => {
         thumb_container_line.scrollTop = track_display.scrollTop;
     }
 });
+
+//sidebar_extend.addEventListener('click', () => {
+//    if(!states.sidebar_extended) {
+//        
+//    }
+//});
