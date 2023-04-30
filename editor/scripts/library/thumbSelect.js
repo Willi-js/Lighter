@@ -60,7 +60,7 @@ export default class ThumbSelect {
 
             const close = document.createElement('img');
             container.append(close);
-            close.src = '../assests/close.svg';
+            close.src = '../assets/close.svg';
             close.classList = 'close-name-change';
 
             for(let i = 0;i<mainFile.states.possibleColors.length;i++) {
@@ -73,7 +73,7 @@ export default class ThumbSelect {
                 color_button.addEventListener('click', () => {
                     thumb.object.style.backgroundColor = color_button.getAttribute('data-color');
                     thumb.background = color_button.getAttribute('data-color');
-                    thumb.object.setAtribute('data-color', color_button.getAttribute('data-color'));
+                    thumb.object.setAttribute('data-color', color_button.getAttribute('data-color'));
 
                     newInputWindow.remove();
                 })
@@ -133,7 +133,7 @@ export default class ThumbSelect {
 
             const close = document.createElement('img');
             container.append(close);
-            close.src = '../assests/close.svg';
+            close.src = '../assets/close.svg';
             close.classList = 'close-name-change';
 
             close.addEventListener('click', () => {

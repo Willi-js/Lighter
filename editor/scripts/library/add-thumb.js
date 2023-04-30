@@ -32,7 +32,7 @@ export default class Thumb {
 
         this.track_settings = document.createElement('img');
         this.button_container.append(this.track_settings);
-        this.track_settings.src = '../assests/arrow.svg';
+        this.track_settings.src = '../assets/arrow.svg';
         this.track_settings.classList = 'track_button';
         this.settingsOn = false;
         

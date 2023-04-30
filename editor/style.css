@@ -31,6 +31,9 @@ body {
     width: calc(100% - 10px);
     background-color: rgb(30, 30, 30);
     border-bottom: solid 1px rgb(90, 90, 90);
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .editor-container {
@@ -301,5 +304,19 @@ body {
     width: 20px;
     height: 20px;
     margin: 2px;
+    cursor: pointer;
+}
+
+.start-buttons {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    width: 100px;
+    height: 30px;
+}
+
+.start-button {
+    width: 20px;
+    rotate: 90deg;
     cursor: pointer;
 }
