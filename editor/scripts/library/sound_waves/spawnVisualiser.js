@@ -17,12 +17,12 @@ export default class Visualiser {
         this.el.style.borderRadius = '5px';
         parent.append(this.el);
 
-        this.current = 0;
+        this.current = 0
 
         this.ctx = this.el.getContext("2d");
     }
     drawLine(volumes) {
-
+        console.log(volumes);
         if(volumes.length > this.width) {
             this.width = volumes.length;
             this.el.width = this.width;
@@ -31,7 +31,7 @@ export default class Visualiser {
 
         volumes.forEach( el => {
             var half = el / 2;
-            this.ctx.fillRect(this.current, this.height / 2 - half, 1, el);
+            this.ctx.fillRect(this.current, this.height / 2 - half, 1, el === 0 ? 1 : el);
             this.current++;
         });
 
@@ -55,7 +55,7 @@ export default class Visualiser {
         }
 
         var half = volume / 2;
-        this.ctx.fillRect(this.current, this.height / 2 - half, 1, volume);
+        this.ctx.fillRect(this.current, this.height / 2 - half, 1, volume === 0 ? 1 : volume);
         this.current++;
 
     }

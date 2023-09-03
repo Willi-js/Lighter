@@ -1,6 +1,6 @@
 import mainFile from '../main.js';
 import Settings from './settings.js';
-import Visualiser from './spawnVisualiser.js';
+import Visualiser from './sound_waves/index.js';
 import ThumbSelect from './thumbSelect.js';
 
 function calculateVolume(audioSegment) {
