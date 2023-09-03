@@ -4,6 +4,7 @@ const thumb_container = document.querySelector('.track-thumb-container');
 const thumb_container_line = document.querySelector('.track-thumb-container-line');
 const track_display = document.querySelector('.track-display');
 const editor = document.querySelector('.editor');
+
 import library from "./library/library.js";
 
 var states = {
@@ -79,8 +80,8 @@ track_display.addEventListener('scroll', () => {
     }
 });
 
-//sidebar_extend.addEventListener('click', () => {
-//    if(!states.sidebar_extended) {
-//        
-//    }
-//});
+addEventListener('keydown', e => {
+    if(e.altKey && e.key.toLowerCase() === 'r') {
+        window.location.reload();
+    }
+});

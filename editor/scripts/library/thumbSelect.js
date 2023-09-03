@@ -75,6 +75,13 @@ export default class ThumbSelect {
                     thumb.background = color_button.getAttribute('data-color');
                     thumb.object.setAttribute('data-color', color_button.getAttribute('data-color'));
 
+                    var childNodes = thumb.track.childNodes;
+                    var childElements = Array.from(childNodes).filter(node => node.nodeType === Node.ELEMENT_NODE);
+
+                    childElements.forEach(el => {
+                        el.style.backgroundColor = color_button.getAttribute('data-color');
+                    })
+
                     newInputWindow.remove();
                 })
             }

@@ -1,6 +1,16 @@
 import mainFile from '../main.js';
 import Settings from './settings.js';
+import Visualiser from './spawnVisualiser.js';
 import ThumbSelect from './thumbSelect.js';
+
+function calculateVolume(audioSegment) {
+    let sum = 0;
+    for (let i = 0; i < audioSegment.length; i++) {
+        sum += Math.abs(audioSegment[i]);
+    }
+    const avg = sum / audioSegment.length;
+    return Math.round(avg * 100);
+}
 
 export default class Thumb {
     constructor(type = 'audio') {
@@ -73,6 +83,58 @@ export default class Thumb {
         this.track = document.createElement('div');
         mainFile.track_display.append(this.track);
         this.track.classList = 'track';
+        this.track.setAttribute("data-pointer", this.id);
+        this.track.style.display = 'flex';
+
+        var track = this.track;
+
+        this.track.addEventListener('dragover', function (event) {
+            event.preventDefault();
+            event.dataTransfer.dropEffect = 'copy';
+        });
+
+        this.track.addEventListener('drop', async function (event) {
+            event.preventDefault();
+
+            const visualizerDiv = event.target;
+            const pointer = visualizerDiv.getAttribute('data-pointer');
+            const color = document.getElementById(pointer).getAttribute('data-color');
+
+            const file = event.dataTransfer.files[0];
+
+            if (!file || file.type !== 'audio/mpeg') {
+                return;
+            }
+
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const reader = new FileReader();
+
+            reader.onload = async function (event) {
+                const arrayBuffer = event.target.result;
+                try {
+                    const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+                    const audioData = audioBuffer.getChannelData(0); 
+
+                    const sampleRate = audioBuffer.sampleRate;
+                    const duration = audioBuffer.duration;
+                    const interval = 0.2; 
+                    const volumeData = [];
+
+                    for (let i = 0; i < duration; i += interval) {
+                        const startSample = Math.floor(i * sampleRate);
+                        const endSample = Math.floor((i + interval) * sampleRate);
+                        const segment = audioData.slice(startSample, endSample);
+                        const volume = calculateVolume(segment);
+                        volumeData.push(volume);
+                    }
+
+                    new Visualiser(track, color).drawLine(volumeData);
+                } catch (error) {
+                    console.error('Error decoding audio data:', error);
+                }
+            };
+            reader.readAsArrayBuffer(file);
+        });
     }
 
     updateId() {
