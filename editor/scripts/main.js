@@ -86,7 +86,7 @@ addEventListener('keydown', e => {
     }
 });
 
-const playbtn = document.querySelector('#play-btn');
+const playbtn = document.getElementById('play-btn');
 
 const playcolmn = document.createElement('div');
 track_display.appendChild(playcolmn);
