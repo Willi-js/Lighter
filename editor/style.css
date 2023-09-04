@@ -70,6 +70,7 @@ body {
 }
 
 .track-display {
+    position: relative;
     width: calc(100% - 100px);
     height: 100%;
     border-top-left-radius: 5px;
@@ -319,4 +320,5 @@ body {
     width: 20px;
     rotate: 90deg;
     cursor: pointer;
+    -webkit-user-drag: none;
 }

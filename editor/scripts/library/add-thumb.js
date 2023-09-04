@@ -117,7 +117,7 @@ export default class Thumb {
 
                     const sampleRate = audioBuffer.sampleRate;
                     const duration = audioBuffer.duration;
-                    const interval = 0.2; 
+                    const interval = 0.12; 
                     const volumeData = [];
 
                     for (let i = 0; i < duration; i += interval) {

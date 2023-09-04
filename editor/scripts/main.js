@@ -16,7 +16,8 @@ var states = {
     settingsOn: false,
     settings: null,
     track_menu: null,
-    scrollEl: null
+    scrollEl: null,
+    playing: false
 }
 
 var exports = {
@@ -32,7 +33,6 @@ var exports = {
 export default exports;
 
 function newProjectIinit() {
-
     sidebar_extend.addEventListener('click', () => {
         if(!states.sidebar_extended) {
             sidebar.style.width = '150px';
@@ -44,7 +44,7 @@ function newProjectIinit() {
             sidebar.style.width = '20px';
             sidebar_extend.style.rotate = '0deg';
             states.sidebar_extended = false;
-            editor.style.width = 'calc(100% - 38px)'
+            editor.style.width = 'calc(100% - 38px)';
         }
     });
 
@@ -85,3 +85,44 @@ addEventListener('keydown', e => {
         window.location.reload();
     }
 });
+
+const playbtn = document.querySelector('#play-btn');
+
+const playcolmn = document.createElement('div');
+track_display.appendChild(playcolmn);
+playcolmn.style.position = 'absolute';
+playcolmn.style.width = '1px';
+playcolmn.style.height = '100%';
+playcolmn.style.top = '0px';
+playcolmn.style.backgroundColor = 'white';
+playcolmn.style.display = 'none';
+
+var playframe = 0;
+var playcolumnpx = 0;
+
+function play() {
+    if(states.playing === true) {
+        if(playframe % 10 === 0) {
+            playcolmn.style.display = 'block';
+            playcolmn.style.left = playcolumnpx + "px";
+            playcolumnpx++
+        }
+        requestAnimationFrame(play);
+        playframe++;
+    } else {
+        playframe = 0;
+        playcolumnpx = 0;
+        playcolmn.style.left = playcolumnpx + "px";
+        playcolmn.style.display = 'none';
+    }
+}
+
+playbtn.addEventListener('click', e => {
+    if(states.playing === false) {
+        states.playing = true;
+        play();
+    } else {
+        states.playing = false;
+    }
+});
+

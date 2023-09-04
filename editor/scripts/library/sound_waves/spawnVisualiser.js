@@ -22,7 +22,6 @@ export default class Visualiser {
         this.ctx = this.el.getContext("2d");
     }
     drawLine(volumes) {
-        console.log(volumes);
         if(volumes.length > this.width) {
             this.width = volumes.length;
             this.el.width = this.width;
