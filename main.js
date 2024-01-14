@@ -1,5 +1,11 @@
-const {app, BrowserWindow, Menu, ipcMain} = require('electron');
+const {app, BrowserWindow, Menu, ipcMain, dialog} = require('electron');
 const path = require('path');
+const fs = require('fs');
+
+const states = {
+    projectPath: "",
+}
+
 
 function createMainWindow() {
     const mainWindonw = new BrowserWindow({
@@ -16,12 +22,50 @@ function createMainWindow() {
         },
     });
 
+    function createProject() {
+
+        dialog.showOpenDialog(mainWindonw, {properties: ['openDirectory']}).then(res => {
+            if(!res.canceled) {
+                states.projectPath = res.filePaths[0];
+
+                const samples = fs.mkdirSync(path.join(states.projectPath, '/samples'));
+                const config = fs.writeFileSync(path.join(states.projectPath, '/config.json'), JSON.stringify({}));
+                const projectFile = fs.writeFileSync(path.join(states.projectPath, '/project.lighter'),
+                `
+sampledata=${states.projectPath}/samples
+configs=${states.projectPath}/config.json
+root=${states.projectPath}
+metadata=${states.projectPath}/metadata
+                `);
+                const meta = fs.mkdirSync(path.join(states.projectPath, '/metadata'));
+
+                mainWindonw.close();
+                createEditorWindow();
+            }
+        });
+    }
+
+    function openProject() {
+        dialog.showOpenDialog(mainWindonw, {properties: ['openDirectory']}).then(res => {
+            if(!res.canceled) {
+                states.projectPath = res.filePaths[0];
+
+                mainWindonw.close();
+                createEditorWindow();
+            }
+        });
+    }
+    
+
     const menu = Menu.buildFromTemplate([]);
     Menu.setApplicationMenu(menu);
 
     ipcMain.handle('new_project', () => {
-        mainWindonw.close();
-        createEditorWindow();
+        createProject();
+    });
+
+    ipcMain.handle("open_project", () => {
+        openProject();
     });
 
     mainWindonw.loadFile(path.join(__dirname, './start_up/index.html'));
@@ -69,6 +113,10 @@ const editormenu = Menu.buildFromTemplate([
     }
 ]);
 
+function getKey(key) {
+    return key;
+}
+
 function createEditorWindow() {
     const editorWindonw = new BrowserWindow({
         title: 'Lighter',
@@ -90,6 +138,12 @@ function createEditorWindow() {
     Menu.setApplicationMenu(editormenu);
 
     editorWindonw.loadFile(path.join(__dirname, './editor/index.html'));
+
+    ipcMain.handle("get", (e, key) => {
+        var ansswer = getKey(key);
+
+        e.sender.send("get", ansswer);
+    });
 }
 
 

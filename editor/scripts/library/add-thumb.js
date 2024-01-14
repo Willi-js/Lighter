@@ -9,7 +9,7 @@ function calculateVolume(audioSegment) {
         sum += Math.abs(audioSegment[i]);
     }
     const avg = sum / audioSegment.length;
-    return Math.round(avg * 100);
+    return Math.round(avg * 200);
 }
 
 export default class Thumb {
@@ -117,8 +117,10 @@ export default class Thumb {
 
                     const sampleRate = audioBuffer.sampleRate;
                     const duration = audioBuffer.duration;
-                    const interval = 0.12; 
+                    const interval = mainFile.states.trackSplit; 
                     const volumeData = [];
+
+                    console.log(duration);
 
                     for (let i = 0; i < duration; i += interval) {
                         const startSample = Math.floor(i * sampleRate);

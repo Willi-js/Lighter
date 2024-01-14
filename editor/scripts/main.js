@@ -17,7 +17,8 @@ var states = {
     settings: null,
     track_menu: null,
     scrollEl: null,
-    playing: false
+    playing: false,
+    trackSplit: 0.12
 }
 
 var exports = {
@@ -100,15 +101,15 @@ playcolmn.style.display = 'none';
 var playframe = 0;
 var playcolumnpx = 0;
 
+
 function play() {
     if(states.playing === true) {
-        if(playframe % 10 === 0) {
+        setTimeout(() => {
             playcolmn.style.display = 'block';
             playcolmn.style.left = playcolumnpx + "px";
-            playcolumnpx++
-        }
-        requestAnimationFrame(play);
-        playframe++;
+            playcolumnpx++;
+            play();
+        }, 1000 * states.trackSplit);
     } else {
         playframe = 0;
         playcolumnpx = 0;
