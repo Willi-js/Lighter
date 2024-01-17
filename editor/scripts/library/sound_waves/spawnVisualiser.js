@@ -1,6 +1,35 @@
+import functions from "../functions.js";
+
 export default class Visualiser {
-    constructor(parent, color, type = "audio") {
+    constructor(parent, color, type = "audio", place = 0) {
+
+        const tplace = functions.calculatePlace(place);
+
+        const last = parent.children[parent.children.length - 1];
+
+        this.margin = tplace;
+
         this.el = document.createElement("canvas");
+        this.el.setAttribute("data-place", tplace);
+
+        if(last) {
+            const wherelast = parseFloat(last.getAttribute('data-place'));
+
+            const wherenew = wherelast+parseFloat(last.style.width.replace('px', ''));
+
+            this.margin = tplace - wherenew;
+        }
+
+        if(parseFloat(tplace) === 0.00) {
+            this.margin = 0;
+        }
+
+        if(this.margin < 0) {
+            this.margin = 0;
+        }
+
+        this.el.style.marginLeft = this.margin + "px";
+
         this.parent = parent;
         this.type = type;
 
@@ -20,8 +49,10 @@ export default class Visualiser {
         this.current = 0
 
         this.ctx = this.el.getContext("2d");
+
     }
     drawLine(volumes) {
+
         if(volumes.length > this.width) {
             this.width = volumes.length;
             this.el.width = this.width;

@@ -321,4 +321,5 @@ body {
     rotate: 90deg;
     cursor: pointer;
     -webkit-user-drag: none;
+    transition-duration: 0;
 }

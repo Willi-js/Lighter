@@ -8,10 +8,25 @@ contextBridge.exposeInMainWorld('electron', {
     get: (key) => {
         ipcRenderer.invoke('get', key);
     },
-    recieve: (callback) => {
-        ipcRenderer.on("get", (e, args) => {
+    recieve: (callback, ch) => {
+        ipcRenderer.on(ch, (e, args) => {
             callback(args);
         });
+    },
+    update: (key, value) => {
+        ipcRenderer.invoke('update', key, value);
+    },
+    addSample: (name, data) => {
+        ipcRenderer.invoke('add_sample', name, data);
+    },
+    updateTrack: (index, track) => {
+        ipcRenderer.invoke('update_track', index, track);
+    },
+    addTrack: (data) => {
+        ipcRenderer.invoke('add_track', data);
+    },
+    processFile: (pathto) => {
+        ipcRenderer.invoke('process_file', pathto);
     }
 });
 

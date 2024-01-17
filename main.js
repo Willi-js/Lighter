@@ -28,8 +28,23 @@ function createMainWindow() {
             if(!res.canceled) {
                 states.projectPath = res.filePaths[0];
 
+                const configs = {
+                    tracks: [
+                        {
+                            name: "0 audio",
+                            samples: [],
+                            type: "audio",
+                        },
+                        {
+                            name: "1 MIDI",
+                            samples: [],
+                            type: "MIDI",
+                        }
+                    ]
+                }
+
                 const samples = fs.mkdirSync(path.join(states.projectPath, '/samples'));
-                const config = fs.writeFileSync(path.join(states.projectPath, '/config.json'), JSON.stringify({}));
+                const config = fs.writeFileSync(path.join(states.projectPath, '/config.json'), JSON.stringify(configs, null, 2));
                 const projectFile = fs.writeFileSync(path.join(states.projectPath, '/project.lighter'),
                 `
 sampledata=${states.projectPath}/samples
@@ -114,7 +129,11 @@ const editormenu = Menu.buildFromTemplate([
 ]);
 
 function getKey(key) {
-    return key;
+    switch (key) {
+        case "config": {
+            return fs.readFileSync(path.join(states.projectPath, '/config.json'), "utf-8");
+        }
+    }
 }
 
 function createEditorWindow() {
@@ -143,6 +162,50 @@ function createEditorWindow() {
         var ansswer = getKey(key);
 
         e.sender.send("get", ansswer);
+    });
+
+    ipcMain.handle("update", (e, key, value) => {
+        states[key] = value;
+    });
+
+    ipcMain.handle("add_sample", (e, name, data) => {
+        fs.copyFileSync(data.path, path.join(states.projectPath, '/samples/', name));
+
+        const config = JSON.parse(getKey("config"));
+        config.tracks[data.id].samples.push({
+            sample: name,
+            place: data.place
+        });
+
+        fs.writeFileSync(path.join(states.projectPath, '/config.json'), JSON.stringify(config, null, 2));
+    });
+
+    ipcMain.handle("update_track", (e, i, d) => {
+
+        if(d === "trash") {
+            const config = JSON.parse(getKey("config"));
+            config.tracks.splice(i, 1);
+            fs.writeFileSync(path.join(states.projectPath, '/config.json'), JSON.stringify(config, null, 2));
+            return;
+        }
+
+        const config = JSON.parse(getKey("config"));
+        config.tracks[i] = d;
+        fs.writeFileSync(path.join(states.projectPath, '/config.json'), JSON.stringify(config, null, 2));
+
+    });
+
+    ipcMain.handle("add_track", (e, d) => {
+        const config = JSON.parse(getKey("config"));
+        config.tracks.push(d);
+        fs.writeFileSync(path.join(states.projectPath, '/config.json'), JSON.stringify(config, null, 2));
+    });
+
+    ipcMain.handle("process_file", async (e, d) => {
+        var d = path.join(states.projectPath, '/samples/', d);
+        const fileBuffer = fs.readFileSync(d);
+
+        e.sender.send("process_file", JSON.stringify(fileBuffer));
     });
 }
 

@@ -33,6 +33,15 @@ var exports = {
 
 export default exports;
 
+function calculateVolume(audioSegment) {
+    let sum = 0;
+    for (let i = 0; i < audioSegment.length; i++) {
+        sum += Math.abs(audioSegment[i]);
+    }
+    const avg = sum / audioSegment.length;
+    return Math.round(avg * 200);
+}
+
 function newProjectIinit() {
     sidebar_extend.addEventListener('click', () => {
         if(!states.sidebar_extended) {
@@ -49,8 +58,63 @@ function newProjectIinit() {
         }
     });
 
-    new library.Thumb();
-    new library.Thumb('MIDI');
+    electron.get("config");
+    electron.recieve((c) => {
+       const config = JSON.parse(c);
+       
+       config.tracks.forEach(e => {
+
+            if(!e.color) {
+                e.color = track.background;
+                electron.updateTrack(track.id, e);
+            }
+            const track = new library.Thumb(e.type, e.name, e.color, "load");
+
+            const visualizerDiv = track.track;
+            const pointer = visualizerDiv.getAttribute('data-pointer');
+            const color = document.getElementById(pointer).getAttribute('data-color');
+
+            if(e.samples.length === 0) return;
+
+            e.samples.forEach(s => {
+
+                electron.processFile(s.sample);
+                electron.recieve(async (fileBufferrrr) => {
+
+                    const fileBuffer = JSON.parse(fileBufferrrr);
+
+                    const arrayBuffer = new Uint8Array(fileBuffer.data).buffer;
+
+                    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
+                    try {
+                        const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+                        const audioData = audioBuffer.getChannelData(0);
+                
+                        const sampleRate = audioBuffer.sampleRate;
+                        const duration = audioBuffer.duration;
+                        const interval = states.trackSplit;
+                        const volumeData = [];
+                
+                        for (let i = 0; i < duration; i += interval) {
+                            const startSample = Math.floor(i * sampleRate);
+                            const endSample = Math.floor((i + interval) * sampleRate);
+                            const segment = audioData.slice(startSample, endSample);
+                            const volume = calculateVolume(segment);
+                            volumeData.push(volume);
+                        }
+                
+                        const vis = new library.Visualiser(track.track, color, "audio", s.place);
+                        vis.drawLine(volumeData);
+
+                    } catch (error) {
+                        console.error('Error decoding audio data:', error);
+                    }
+                }, "process_file");
+            });
+
+       })
+    }, "get");
 }
 
 newProjectIinit();
@@ -121,9 +185,29 @@ function play() {
 playbtn.addEventListener('click', e => {
     if(states.playing === false) {
         states.playing = true;
+        playbtn.src = '../assets/play-green.svg';
+        playbtn.style.rotate = '0deg';
         play();
     } else {
         states.playing = false;
+        playbtn.src = '../assets/play.svg';
+        playbtn.style.rotate = '90deg';
     }
 });
 
+addEventListener("keyup", (e) => {
+    const key = e.key.toLowerCase();
+
+    if(key === " ") {
+        if(states.playing === false) {
+            states.playing = true;
+            playbtn.src = '../assets/play-green.svg';
+            playbtn.style.rotate = '0deg';
+            play();
+        } else {
+            states.playing = false;
+            playbtn.src = '../assets/play.svg';
+            playbtn.style.rotate = '90deg';
+        }
+    }
+});

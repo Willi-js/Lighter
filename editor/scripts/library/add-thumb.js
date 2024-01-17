@@ -13,7 +13,7 @@ function calculateVolume(audioSegment) {
 }
 
 export default class Thumb {
-    constructor(type = 'audio') {
+    constructor(type = 'audio', name, color, loadType = "new") {
 
         mainFile.states.tracks_array.push(this);
 
@@ -22,9 +22,9 @@ export default class Thumb {
 
         this.id = mainFile.states.tracks_array.indexOf(this);
         this.type = type;
-        this.background = mainFile.states.possibleColors[Math.floor(Math.random()*mainFile.states.possibleColors.length)];
+        this.background = color ? color : mainFile.states.possibleColors[Math.floor(Math.random()*mainFile.states.possibleColors.length)];
         this.object.setAttribute('data-color', this.background);
-        this.name = `${this.id} ${type}`;
+        this.name = name ? name :`${this.id} ${type}`;
         
         mainFile.thumb_container_line.append(this.object);
         this.object.classList = `track-thumb ${this.type}`;
@@ -109,6 +109,8 @@ export default class Thumb {
             const audioContext = new (window.AudioContext || window.webkitAudioContext)();
             const reader = new FileReader();
 
+            const mainE = event;
+
             reader.onload = async function (event) {
                 const arrayBuffer = event.target.result;
                 try {
@@ -120,8 +122,6 @@ export default class Thumb {
                     const interval = mainFile.states.trackSplit; 
                     const volumeData = [];
 
-                    console.log(duration);
-
                     for (let i = 0; i < duration; i += interval) {
                         const startSample = Math.floor(i * sampleRate);
                         const endSample = Math.floor((i + interval) * sampleRate);
@@ -130,13 +130,31 @@ export default class Thumb {
                         volumeData.push(volume);
                     }
 
-                    new Visualiser(track, color).drawLine(volumeData);
+                    const vis = new Visualiser(track, color, "audio");
+                    vis.drawLine(volumeData);
+
+                    const data = {
+                        id: mainE.target.getAttribute('data-pointer'),
+                        path: file.path,
+                        place: 0
+                    }
+
+                    electron.addSample(file.name, data);
                 } catch (error) {
                     console.error('Error decoding audio data:', error);
                 }
             };
             reader.readAsArrayBuffer(file);
         });
+
+        if(loadType === "new") {
+            electron.addTrack({
+                name: this.name,
+                samples: {},
+                type: this.type,
+                color: this.background
+            });
+        }
     }
 
     updateId() {
@@ -156,13 +174,16 @@ export default class Thumb {
 
         if(this.settingsOn) {
             mainFile.states.settings.remove();
+            mainFile.thumb_container.style.width = '100px';
             this.settingsOn = false;
             mainFile.states.settingsOn = false;
             mainFile.states.track_settings_on_track = null;
             mainFile.states.settings = null;
         }
 
-        mainFile.states.tracks_array.splice(this.id, 1)
+        electron.updateTrack(this.id, "trash");
+
+        mainFile.states.tracks_array.splice(this.id, 1);
 
         mainFile.states.tracks_array.forEach(item => {
             item.updateId();

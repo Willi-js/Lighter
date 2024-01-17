@@ -95,13 +95,13 @@ export default class ThumbSelect {
         this.createAudio.addEventListener('click', () => {
             this.menu.remove();
 
-            new library.Thumb('audio');
+            new library.Thumb('audio', undefined, undefined, "new");
         });
 
         this.createMIDI.addEventListener('click', () => {
             this.menu.remove();
 
-            new library.Thumb('MIDI');
+            new library.Thumb('MIDI', undefined, undefined, "new");
         });
 
         this.remove_button.addEventListener('click', e => {
