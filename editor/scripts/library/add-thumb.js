@@ -150,7 +150,7 @@ export default class Thumb {
         if(loadType === "new") {
             electron.addTrack({
                 name: this.name,
-                samples: {},
+                samples: [],
                 type: this.type,
                 color: this.background
             });

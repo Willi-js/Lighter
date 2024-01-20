@@ -6,7 +6,7 @@
   "main": "main.js",
   "scripts": {
     "start": "npx electronmon ./",
-    "build": "electron-builder --win --x64"
+    "build": "electron-builder --x64"
   },
   "keywords": [],
   "author": "",
@@ -17,7 +17,8 @@
     "electron-packager": "^17.1.1"
   },
   "dependencies": {
-    "toastify-js": "^1.12.0"
+    "toastify-js": "^1.12.0",
+    "webt": "^0.0.11"
   },
   "build": {
     "productName": "Lighter",

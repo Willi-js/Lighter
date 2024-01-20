@@ -68,6 +68,8 @@ function newProjectIinit() {
                 e.color = track.background;
                 electron.updateTrack(track.id, e);
             }
+
+
             const track = new library.Thumb(e.type, e.name, e.color, "load");
 
             const visualizerDiv = track.track;
@@ -79,7 +81,7 @@ function newProjectIinit() {
             e.samples.forEach(s => {
 
                 electron.processFile(s.sample);
-                electron.recieve(async (fileBufferrrr) => {
+                electron.recieve((fileBufferrrr) => {
 
                     const fileBuffer = JSON.parse(fileBufferrrr);
 
@@ -87,26 +89,27 @@ function newProjectIinit() {
 
                     const audioContext = new (window.AudioContext || window.webkitAudioContext)();
 
-                    try {
-                        const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
-                        const audioData = audioBuffer.getChannelData(0);
-                
-                        const sampleRate = audioBuffer.sampleRate;
-                        const duration = audioBuffer.duration;
-                        const interval = states.trackSplit;
-                        const volumeData = [];
-                
-                        for (let i = 0; i < duration; i += interval) {
-                            const startSample = Math.floor(i * sampleRate);
-                            const endSample = Math.floor((i + interval) * sampleRate);
-                            const segment = audioData.slice(startSample, endSample);
-                            const volume = calculateVolume(segment);
-                            volumeData.push(volume);
+                    try { async function a() {
+                            const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+                            const audioData = audioBuffer.getChannelData(0);
+                    
+                            const sampleRate = audioBuffer.sampleRate;
+                            const duration = audioBuffer.duration;
+                            const interval = states.trackSplit;
+                            const volumeData = [];
+                    
+                            for (let i = 0; i < duration; i += interval) {
+                                const startSample = Math.floor(i * sampleRate);
+                                const endSample = Math.floor((i + interval) * sampleRate);
+                                const segment = audioData.slice(startSample, endSample);
+                                const volume = calculateVolume(segment);
+                                volumeData.push(volume);
+                            }
+                    
+                            const vis = new library.Visualiser(track.track, color, "audio", s.place);
+                            vis.drawLine(volumeData);
                         }
-                
-                        const vis = new library.Visualiser(track.track, color, "audio", s.place);
-                        vis.drawLine(volumeData);
-
+                        a();
                     } catch (error) {
                         console.error('Error decoding audio data:', error);
                     }

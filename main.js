@@ -2,6 +2,8 @@ const {app, BrowserWindow, Menu, ipcMain, dialog} = require('electron');
 const path = require('path');
 const fs = require('fs');
 
+
+
 const states = {
     projectPath: "",
 }
@@ -152,7 +154,6 @@ function createEditorWindow() {
     });
 
     editorWindonw.webContents.openDevTools();
-
     
     Menu.setApplicationMenu(editormenu);
 
@@ -207,6 +208,9 @@ function createEditorWindow() {
 
         e.sender.send("process_file", JSON.stringify(fileBuffer));
     });
+
+    
+
 }
 
 
