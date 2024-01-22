@@ -11,6 +11,7 @@ export default class Visualiser {
 
         this.el = document.createElement("canvas");
         this.el.setAttribute("data-place", tplace);
+        this.el.setAttribute("data-place-ms", place);
 
         if(last) {
             const wherelast = parseFloat(last.getAttribute('data-place'));

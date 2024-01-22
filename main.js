@@ -1,4 +1,4 @@
-const {app, BrowserWindow, Menu, ipcMain, dialog} = require('electron');
+const {app, BrowserWindow, Menu, ipcMain, dialog, shell} = require('electron');
 const path = require('path');
 const fs = require('fs');
 
@@ -91,13 +91,18 @@ metadata=${states.projectPath}/metadata
 function loadPreferenceWindow() {
     const preferenceWindow = new BrowserWindow({
         title: 'Lighter preferences',
-        width: 400,
+        width:  700,//400,
         height: 700,
         icon: path.join(__dirname, './start_up/logo.ico'),
         minHeight: 700,
-        minWidth: 400,
+        minWidth: 700, //400,
         maxHeight: 700,
-        maxWidth: 400
+        maxWidth: 400,
+        webPreferences: {
+            contextIsolation: true,
+            nodeIntegration: true,
+            preload: path.join(__dirname, 'preload.js'),
+        },
     });
 
     preferenceWindow.once('ready-to-show', () => {
@@ -107,7 +112,9 @@ function loadPreferenceWindow() {
 
     preferenceWindow.once('closed', () => {
         Menu.setApplicationMenu(editormenu);
-    })
+    });
+
+    preferenceWindow.webContents.openDevTools();
  
     preferenceWindow.loadFile(path.join(__dirname, './preferenceWindow/index.html'));
 }
@@ -159,60 +166,61 @@ function createEditorWindow() {
 
     editorWindonw.loadFile(path.join(__dirname, './editor/index.html'));
 
-    ipcMain.handle("get", (e, key) => {
-        var ansswer = getKey(key);
-
-        e.sender.send("get", ansswer);
-    });
-
-    ipcMain.handle("update", (e, key, value) => {
-        states[key] = value;
-    });
-
-    ipcMain.handle("add_sample", (e, name, data) => {
-        fs.copyFileSync(data.path, path.join(states.projectPath, '/samples/', name));
-
-        const config = JSON.parse(getKey("config"));
-        config.tracks[data.id].samples.push({
-            sample: name,
-            place: data.place
-        });
-
-        fs.writeFileSync(path.join(states.projectPath, '/config.json'), JSON.stringify(config, null, 2));
-    });
-
-    ipcMain.handle("update_track", (e, i, d) => {
-
-        if(d === "trash") {
-            const config = JSON.parse(getKey("config"));
-            config.tracks.splice(i, 1);
-            fs.writeFileSync(path.join(states.projectPath, '/config.json'), JSON.stringify(config, null, 2));
-            return;
-        }
-
-        const config = JSON.parse(getKey("config"));
-        config.tracks[i] = d;
-        fs.writeFileSync(path.join(states.projectPath, '/config.json'), JSON.stringify(config, null, 2));
-
-    });
-
-    ipcMain.handle("add_track", (e, d) => {
-        const config = JSON.parse(getKey("config"));
-        config.tracks.push(d);
-        fs.writeFileSync(path.join(states.projectPath, '/config.json'), JSON.stringify(config, null, 2));
-    });
-
-    ipcMain.handle("process_file", async (e, d) => {
-        var d = path.join(states.projectPath, '/samples/', d);
-        const fileBuffer = fs.readFileSync(d);
-
-        e.sender.send("process_file", JSON.stringify(fileBuffer));
-    });
-
-    
-
 }
 
+ipcMain.handle("get", (e, key) => {
+    var ansswer = getKey(key);
+
+    e.sender.send("get", ansswer);
+});
+
+ipcMain.handle("update", (e, key, value) => {
+    states[key] = value;
+});
+
+ipcMain.handle("add_sample", (e, name, data) => {
+    fs.copyFileSync(data.path, path.join(states.projectPath, '/samples/', name));
+
+    const config = JSON.parse(getKey("config"));
+    config.tracks[data.id].samples.push({
+        sample: name,
+        place: data.place
+    });
+
+    fs.writeFileSync(path.join(states.projectPath, '/config.json'), JSON.stringify(config, null, 2));
+});
+
+ipcMain.handle("update_track", (e, i, d) => {
+
+    if(d === "trash") {
+        const config = JSON.parse(getKey("config"));
+        config.tracks.splice(i, 1);
+        fs.writeFileSync(path.join(states.projectPath, '/config.json'), JSON.stringify(config, null, 2));
+        return;
+    }
+
+    const config = JSON.parse(getKey("config"));
+    config.tracks[i] = d;
+    fs.writeFileSync(path.join(states.projectPath, '/config.json'), JSON.stringify(config, null, 2));
+
+});
+
+ipcMain.handle("add_track", (e, d) => {
+    const config = JSON.parse(getKey("config"));
+    config.tracks.push(d);
+    fs.writeFileSync(path.join(states.projectPath, '/config.json'), JSON.stringify(config, null, 2));
+});
+
+ipcMain.handle("process_file", async (e, d) => {
+    var d = path.join(states.projectPath, '/samples/', d);
+    const fileBuffer = fs.readFileSync(d);
+
+    e.sender.send("process_file", JSON.stringify(fileBuffer));
+});
+
+ipcMain.handle("open_plugins", () => {
+    shell.openPath(path.join(__dirname, './Plugins'));
+})
 
 app.whenReady().then(() => {
     createMainWindow();

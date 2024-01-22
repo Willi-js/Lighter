@@ -27,6 +27,9 @@ contextBridge.exposeInMainWorld('electron', {
     },
     processFile: (pathto) => {
         ipcRenderer.invoke('process_file', pathto);
+    },
+    openPlugins: () => {
+        ipcRenderer.invoke('open_plugins');
     }
 });
 

@@ -298,7 +298,9 @@ body {
     height: 100px;
     display: flex;
     justify-content: center;
-    align-items: center
+    align-items: center;
+    flex-wrap: wrap;
+    max-width: 200px;
 }
 
 .color-button {
@@ -306,6 +308,9 @@ body {
     height: 20px;
     margin: 2px;
     cursor: pointer;
+    border: solid black 2px;
+    border-radius: 5px;
+    box-shadow: inset 2px 2px 5px black ;
 }
 
 .start-buttons {

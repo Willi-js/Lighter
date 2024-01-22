@@ -1,3 +1,11 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+
+* {
+    color: whitesmoke;
+    font-family: 'Poppins', sans-serif;
+    transition-duration: .1s;
+}
+
 html body {
     margin: 0;
     padding: 0;
@@ -10,4 +18,49 @@ body, html {
 body {
     background-color: rgb(30, 30, 30);
     user-select: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.cat-select {
+    width: calc(100% - 20px);
+    height: 30px;
+    border-bottom: solid 1px white;
+    display: flex;
+    align-items: center;
+    font-size: 13px;
+}
+
+.cat-button {
+    padding: 0px 10px;
+    border-radius: 99px;
+    cursor: pointer;
+}
+
+.selected {
+    background-color: rgba(195, 195, 195, 0.24);
+}
+
+.cat-button:hover {
+    background-color: rgba(195, 195, 195, 0.24);
+}
+
+.content {
+    height: 100%;
+    width: 100%;
+}
+
+.open-folder {
+    margin: 20px 10px;
+    border-radius: 2px;
+    border: none;
+    background-color: rgb(46, 46, 46);
+    border: solid 2px rgb(79, 78, 78);
+    cursor: pointer;
+}
+
+.open-folder:active {
+    background-color: rgb(78, 78, 78);
 }

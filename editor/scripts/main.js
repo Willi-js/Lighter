@@ -10,7 +10,7 @@ import library from "./library/library.js";
 var states = {
     sidebar_extended: false,
     track_count: 0,
-    possibleColors: ['red', 'blue', 'aqua', 'limegreen', 'aquamarine', 'cadetblue', 'crimson', 'darkmagenta', 'darkorange'],
+    possibleColors: ['red', 'blue', 'aqua', 'limegreen', 'aquamarine', 'cadetblue', 'crimson', 'darkmagenta', 'darkorange', "#eb4034"],
     track_settings_on_track: null,
     tracks_array: [],
     settingsOn: false,
@@ -78,10 +78,15 @@ function newProjectIinit() {
 
             if(e.samples.length === 0) return;
 
+            var count = 0
+
             e.samples.forEach(s => {
 
                 electron.processFile(s.sample);
                 electron.recieve((fileBufferrrr) => {
+
+                    count++;
+                    if(count > e.samples.length) return;
 
                     const fileBuffer = JSON.parse(fileBufferrrr);
 
@@ -113,6 +118,8 @@ function newProjectIinit() {
                     } catch (error) {
                         console.error('Error decoding audio data:', error);
                     }
+
+                    
                 }, "process_file");
             });
 
