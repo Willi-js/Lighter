@@ -11,7 +11,7 @@ Understanding the intricacies of the codebase might be a daunting task but if u 
 - node.js v20 <
 - npm v10.2.4 <
 - clang 
-- emcc (Emscpt: https://emscripten.org/docs/getting_started/downloads.html)
+- emcc (Emscript: https://emscripten.org/docs/getting_started/downloads.html)
 
 >That should be it for requirements if I haven't missed anything, if I have let me know.
 
