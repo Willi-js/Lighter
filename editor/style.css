@@ -227,6 +227,8 @@ body {
     -webkit-user-drag: none;
     cursor: pointer;
     margin-top: 20px;
+    border: solid 2px #1e1e1e;
+    border-radius: 5px;
 }
 
 .input-name {
