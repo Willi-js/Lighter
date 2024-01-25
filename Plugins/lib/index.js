@@ -1,15 +1,15 @@
 const states = {
-    sidebar_extended: false,
-    track_count: 0,
-    possibleColors: [],
+    sidebar_extended: Boolean,
+    track_count: Number,
+    possibleColors: Array,
     track_settings_on_track: null,
-    tracks_array: [],
-    settingsOn: false,
+    tracks_array: Array,
+    settingsOn: Boolean,
     settings: null,
     track_menu: null,
     scrollEl: null,
-    playing: false,
-    trackSplit: 0
+    playing: Boolean,
+    trackSplit: Number
 }
 
 export default {
