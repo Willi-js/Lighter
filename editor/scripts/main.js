@@ -10,7 +10,7 @@ import library from "./library/library.js";
 var states = {
     sidebar_extended: false,
     track_count: 0,
-    possibleColors: ['red', 'blue', 'aqua', 'limegreen', 'aquamarine', 'cadetblue', 'crimson', 'darkmagenta', 'darkorange', "#eb4034"],
+    possibleColors: ['red', 'blue', 'aqua', 'limegreen', 'aquamarine', 'cadetblue', 'crimson', 'darkmagenta', 'darkorange'],
     track_settings_on_track: null,
     tracks_array: [],
     settingsOn: false,
@@ -221,3 +221,27 @@ addEventListener("keyup", (e) => {
         }
     }
 });
+
+electron.getPlugins();
+electron.recieve(d => {
+    const keys = Object.keys(d.plugins);
+    const enabled = [];
+    keys.forEach(key => {
+        if(d.plugins[key] === true) {
+            enabled.push(key);
+        }
+    });
+    const files = [];
+    enabled.forEach(e => {
+        files.push(d.list[e]);
+    });
+    files.forEach(key => {
+        electron.getPlugin(key);
+        electron.recieve(da => {
+            const script = document.createElement('script');
+            script.type = "module";
+            script.innerHTML = da;
+            document.body.appendChild(script);
+        }, "get_plugin");
+    });
+}, "get_plugins");

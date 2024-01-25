@@ -1,13 +1,12 @@
 const {app, BrowserWindow, Menu, ipcMain, dialog, shell} = require('electron');
 const path = require('path');
 const fs = require('fs');
-
-
+const preload = require("./helpers/preload");
 
 const states = {
     projectPath: "",
+    plugins: ""
 }
-
 
 function createMainWindow() {
     const mainWindonw = new BrowserWindow({
@@ -86,6 +85,8 @@ metadata=${states.projectPath}/metadata
     });
 
     mainWindonw.loadFile(path.join(__dirname, './start_up/index.html'));
+    states.plugins = path.join(__dirname, './Plugins');
+    preload(states);
 }
 
 function loadPreferenceWindow() {
@@ -165,7 +166,6 @@ function createEditorWindow() {
     Menu.setApplicationMenu(editormenu);
 
     editorWindonw.loadFile(path.join(__dirname, './editor/index.html'));
-
 }
 
 ipcMain.handle("get", (e, key) => {
@@ -220,7 +220,28 @@ ipcMain.handle("process_file", async (e, d) => {
 
 ipcMain.handle("open_plugins", () => {
     shell.openPath(path.join(__dirname, './Plugins'));
-})
+});
+
+ipcMain.handle("update_plugins", () => {
+    preload(states);
+});
+
+ipcMain.handle("get_plugin_list", e => {
+    const plugins = JSON.parse(fs.readFileSync(states.plugins+"/config.json"));
+    e.sender.send("get_plugin_list", plugins.plugins);
+});
+
+ipcMain.handle("get_plugins", (e) => {
+    const cnf = JSON.parse(fs.readFileSync(states.plugins+"/config.json"));
+
+    e.sender.send("get_plugins", cnf);
+});
+
+ipcMain.handle("get_plugin", (e, p) => {
+    const cnf = fs.readFileSync(states.plugins+`/${p}`, "utf-8");
+
+    e.sender.send("get_plugin", cnf);
+});
 
 app.whenReady().then(() => {
     createMainWindow();
