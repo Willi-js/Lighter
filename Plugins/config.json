@@ -1,4 +1,8 @@
 {
-  "list": {},
-  "plugins": {}
+  "list": {
+    "Test": "Test.js"
+  },
+  "plugins": {
+    "Test": true
+  }
 }

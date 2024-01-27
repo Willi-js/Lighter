@@ -157,6 +157,7 @@ track_display.addEventListener('scroll', () => {
 
 addEventListener('keydown', e => {
     if(e.altKey && e.key.toLowerCase() === 'r') {
+        electron.updatePlugins();
         window.location.reload();
     }
 });

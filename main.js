@@ -243,6 +243,12 @@ ipcMain.handle("get_plugin", (e, p) => {
     e.sender.send("get_plugin", cnf);
 });
 
+ipcMain.handle("update_plugin", (e, n, d) => {
+    const cnf = JSON.parse(fs.readFileSync(states.plugins+"/config.json"));
+    cnf.plugins[n] = d;
+    fs.writeFileSync(states.plugins+"/config.json", JSON.stringify(cnf, null, 2));
+});
+
 app.whenReady().then(() => {
     createMainWindow();
 
