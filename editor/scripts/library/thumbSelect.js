@@ -80,7 +80,14 @@ export default class ThumbSelect {
 
                     childElements.forEach(el => {
                         el.style.backgroundColor = color_button.getAttribute('data-color');
-                    })
+                    });
+
+                    electron.getTrack(thumb.object.id);
+                    electron.recieve((t) => {
+                        console.log(t)
+                        t.color = color_button.getAttribute('data-color');
+                        electron.updateTrack(thumb.object.id, t);
+                    }, "get_track");
 
                     newInputWindow.remove();
                 })
