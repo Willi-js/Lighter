@@ -2,6 +2,7 @@ const {app, BrowserWindow, Menu, ipcMain, dialog, shell} = require('electron');
 const path = require('path');
 const fs = require('fs');
 const preload = require("./helpers/preload");
+const os = require('os');
 
 const states = {
     projectPath: "",
@@ -13,7 +14,7 @@ function createMainWindow() {
         title: 'Lighter',
         width: 1000,
         height: 700,
-        icon: path.join(__dirname, './start_up/logo.ico'),
+        icon: path.join(__dirname, os.platform() === 'win32' ? './start_up/logo.ico' : 'logo.png'),
         minHeight: 600,
         minWidth: 520,
         webPreferences: {
@@ -94,7 +95,7 @@ function loadPreferenceWindow() {
         title: 'Lighter preferences',
         width:  700,//400,
         height: 700,
-        icon: path.join(__dirname, './start_up/logo.ico'),
+        icon: path.join(__dirname, os.platform() === 'win32' ? './start_up/logo.ico' : 'logo.png'),
         minHeight: 700,
         minWidth: 700, //400,
         maxHeight: 700,
@@ -151,7 +152,7 @@ function createEditorWindow() {
         title: 'Lighter',
         width: 1300,
         height: 700,
-        icon: path.join(__dirname, './start_up/logo.ico'),
+        icon: path.join(__dirname, os.platform() === 'win32' ? './start_up/logo.ico' : 'logo.png'),
         minHeight: 350,
         minWidth: 1300,
         webPreferences: {
@@ -247,6 +248,11 @@ ipcMain.handle("update_plugin", (e, n, d) => {
     const cnf = JSON.parse(fs.readFileSync(states.plugins+"/config.json"));
     cnf.plugins[n] = d;
     fs.writeFileSync(states.plugins+"/config.json", JSON.stringify(cnf, null, 2));
+});
+
+ipcMain.handle("get_track", (e, i) => {
+    const config = JSON.parse(getKey("config"));
+    e.sender.send("get_track", config.tracks[i]);
 });
 
 app.whenReady().then(() => {

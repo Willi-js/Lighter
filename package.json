@@ -1,19 +1,20 @@
 {
   "name": "lighter",
+  "description": "Lighter a cool and easy to learn DAW",
   "productName": "Lighter",
   "version": "1.0.0",
-  "description": "",
   "main": "main.js",
   "scripts": {
     "start": "npx electronmon ./",
-    "build": "electron-builder --x64"
+    "build-linux": "npx electron-packager . lighter --platform=linux --arch=x64 --overwrite --icon=logo.png",
+    "compile-linux": "npx electron-installer-debian --src lighter-linux-x64 --dest ./out --arch amd64"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "electron": "^28.1.3",
-    "electron-builder": "^24.9.1",
+    "electron-installer-debian": "^3.2.0",
     "electron-packager": "^17.1.1"
   },
   "dependencies": {
@@ -22,8 +23,15 @@
   },
   "build": {
     "productName": "Lighter",
+    "appId": "Lighter",
     "win": {
       "icon": "start_up/logo.ico"
-    }
+    },
+    "linux": {
+      "icon": "logo.png",
+      "target": "AppImage",
+      "category": "Audio"
+    },
+    "description": "Lighter a cool and easy to learn DAW"
   }
 }

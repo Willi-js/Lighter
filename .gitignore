@@ -1,6 +1,8 @@
 /node_modules/
 /dist/
-/.vscode/
+/.vscode
 /csrc/main.js
 /csrc/main.wasm
 /csrc/src/example.h
+/lighter-linux-x64
+/out

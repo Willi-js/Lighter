@@ -25,6 +25,9 @@ contextBridge.exposeInMainWorld('electron', {
     addTrack: (data) => {
         ipcRenderer.invoke('add_track', data);
     },
+    getTrack: (i) => {
+        ipcRenderer.invoke('get_track', i);
+    },
     processFile: (pathto) => {
         ipcRenderer.invoke('process_file', pathto);
     },
@@ -45,7 +48,7 @@ contextBridge.exposeInMainWorld('electron', {
     },
     updatePlugin: (name, data) => {
         ipcRenderer.invoke('update_plugin', name, data);
-    }
+    },
 });
 
 contextBridge.exposeInMainWorld('path', {
