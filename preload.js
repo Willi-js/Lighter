@@ -49,6 +49,9 @@ contextBridge.exposeInMainWorld('electron', {
     updatePlugin: (name, data) => {
         ipcRenderer.invoke('update_plugin', name, data);
     },
+    getExplPath: () => {
+        ipcRenderer.invoke('get_expl_path');
+    }
 });
 
 contextBridge.exposeInMainWorld('path', {

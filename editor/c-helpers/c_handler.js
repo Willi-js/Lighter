@@ -8,9 +8,13 @@ Module.ccall(
 )
 */
 
-Module.ccall(
+/*Module.ccall(
     "exploreSurface", //function name
     null, //return type
     ["string"], //argument types
     ["test hi"] //arguments
-);
+);*/
+
+document.addEventListener("DOMContentLoaded", async () => {
+    
+});

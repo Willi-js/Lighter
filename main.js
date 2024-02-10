@@ -255,6 +255,10 @@ ipcMain.handle("get_track", (e, i) => {
     e.sender.send("get_track", config.tracks[i]);
 });
 
+ipcMain.handle('get_expl_path', (e) => {
+    e.sender.send('get_expl_path', path.join(__dirname, "./Explorer"));
+});
+
 app.whenReady().then(() => {
     createMainWindow();
 
