@@ -259,6 +259,36 @@ ipcMain.handle('get_expl_path', (e) => {
     e.sender.send('get_expl_path', path.join(__dirname, "./Explorer"));
 });
 
+ipcMain.handle('read_explorer', (e, d, c, i) => {
+    if(d === undefined) {
+        const out = [];
+        fs.readdirSync(path.join(__dirname, "./Explorer")).forEach(file => {
+            out.push({
+                name: file,
+                path: path.join(__dirname, "./Explorer/", file),
+                type: fs.statSync(path.join(__dirname, `./Explorer/`, file)).isDirectory() ? "folder" : "file",
+                color: undefined,
+                index: undefined,
+                isMain: true
+            });
+        });
+        e.sender.send('read_explorer', out);
+    } else {
+        const out = [];
+        fs.readdirSync(path.join(d)).forEach(file => {
+            out.push({
+                name: file,
+                path: path.join(d, file),
+                type: fs.statSync(path.join(d, file)).isDirectory() ? "folder" : "file",
+                color: c,
+                index: i,
+                isMain: false
+            });
+        });
+        e.sender.send('read_explorer', out);
+    }
+});
+
 app.whenReady().then(() => {
     createMainWindow();
 

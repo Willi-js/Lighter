@@ -49,6 +49,8 @@ body {
     margin-left: 5px;
     border: solid 1px rgb(90, 90, 90);
     border-radius: 5px;
+    display: flex;
+    flex-direction: column;
 }
 
 .editor {
@@ -329,4 +331,34 @@ body {
     cursor: pointer;
     -webkit-user-drag: none;
     transition-duration: 0;
+}
+
+.sidebar-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+    gap: 5px;
+}
+
+.explorer-item {
+    font-family: 'Poppins', sans-serif;
+    font-size: 12px;
+    display: flex;
+    height: 20px;
+    gap: 5px;
+    align-items: center;
+}
+
+.explorer-item p {
+    margin: 0;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    font-weight: bold;
+}
+
+.explorer-item-icon {
+    width: 20px;
 }

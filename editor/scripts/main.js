@@ -4,8 +4,10 @@ const thumb_container = document.querySelector('.track-thumb-container');
 const thumb_container_line = document.querySelector('.track-thumb-container-line');
 const track_display = document.querySelector('.track-display');
 const editor = document.querySelector('.editor');
+const sidebarContent = document.querySelector('.sidebar-container');
 
 import library from "./library/library.js";
+import ExploreSurface from "./library/FileExplorer.js";
 
 var states = {
     sidebar_extended: false,
@@ -28,7 +30,9 @@ var exports = {
     states: states,
     thumb_container_line: thumb_container_line,
     track_display: track_display,
-    editor: editor
+    editor: editor,
+    ExploreSurface: ExploreSurface,
+    sidebarContent: sidebarContent
 }
 
 export default exports;
@@ -42,6 +46,11 @@ function calculateVolume(audioSegment) {
     return Math.round(avg * 200);
 }
 
+const children = sidebarContent.children;
+for(let i = 0; i < children.length; i++) {
+   children[i].style.display = "none";
+}
+
 function newProjectIinit() {
     sidebar_extend.addEventListener('click', () => {
         if(!states.sidebar_extended) {
@@ -50,11 +59,20 @@ function newProjectIinit() {
             states.sidebar_extended = true;
             editor.style.width = 'calc(100% - 168px)';
 
+            for(let i = 0; i < children.length; i++) {
+                children[i].style.display = "flex";
+            }
+
         }  else {
             sidebar.style.width = '20px';
             sidebar_extend.style.rotate = '0deg';
             states.sidebar_extended = false;
             editor.style.width = 'calc(100% - 38px)';
+
+            for(let i = 0; i < children.length; i++) {
+                children[i].style.display = "none";
+            }
+
         }
     });
 
@@ -128,6 +146,7 @@ function newProjectIinit() {
 }
 
 newProjectIinit();
+await ExploreSurface();
 
 thumb_container_line.addEventListener('mousedown', (event) => {
     if(event.target.classList.value === 'track-thumb-container-line' && event.button === 2) {

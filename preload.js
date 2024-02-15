@@ -51,6 +51,9 @@ contextBridge.exposeInMainWorld('electron', {
     },
     getExplPath: () => {
         ipcRenderer.invoke('get_expl_path');
+    },
+    readExplorer: (d, c, i) => {
+        ipcRenderer.invoke('read_explorer', d, c, i);
     }
 });
 

@@ -19,5 +19,7 @@ export default {
     states: states,
     thumb_container_line: Element || null,
     track_display: Element || null,
-    editor: Element || null
+    editor: Element || null,
+    ExploreSurface: () => {},
+    sidebarContent: Element || null
 }
