@@ -1,85 +1,101 @@
 import main from "../main.js";
+import elements from "./elements.js";
 
 class ExplItem {
-    constructor(name = "", path = "", color = "white", icon, type = "folder", parent) {
+    constructor(name, color, type, path, index, isMain, parent = undefined) {
+        this.wrapper = elements.create('div');
+        this.wrapper.classList.add("explorer-item-wrapper");
+        this.main = elements.create('div');
+
+        this.main.classList.add("explorer-item");
+        this.wrapper.append(this.main);
+
         this.name = name;
-        this.path = path;
         this.color = color;
+        this.type = type;
+        this.path = path;
+        this.index = index;
+        this.isMain = isMain;
 
-        this.index = main.sidebarContent.childElementCount;
-
-        this.core = document.createElement('div');
-        this.core.classList = 'explorer-item';
-        this.core.style.color = color;
-
-        if(icon != "none" && icon != undefined) {
-            this.icon = `../icons/${icon}.svg`;
-
-            this.iconEl = document.createElement('img');
-            this.core.append(this.iconEl);
-            this.iconEl.classList = 'explorer-item-icon';
-            this.iconEl.src = this.icon;
-            this.iconEl.style.fill = color;
-            this.iconEl.style.stroke = color;
+        if(this.isMain) {
+            main.sidebarContent.append(this.wrapper);
+        } else {
+            if(this.type !== "folder") {
+                main.sidebarContent.children[index].append(this.wrapper);
+                this.wrapper.classList.add("secondary-wrapper");
+            }
         }
 
-        this.nameEl = document.createElement('p');
-        this.nameEl.textContent = name;
-        this.nameEl.classList = 'explorer-item-name';
-        this.core.append(this.nameEl);
+        if(this.index === undefined) {
+            this.index = main.sidebarContent.children.length - 1;
+        }
 
-        this.main = document.createElement("div");
-        this.main.append(this.core);
+        if(this.type === "file") {
+            this.wrapper.style.display = "none";
+        }
 
-        if(!parent && this.type == "folder") main.sidebarContent.append(this.main);
-        else if(!parent && this.type == "file") main.sidebarContent.append(this.core);
-        else if(parent && this.type == "folder") parent.append(this.main);
-        else if(parent && this.type == "file") parent.append(this.core);
+        if(this.type === "folder") {
+            this.wrapper.setAttribute("open", false);
+            this.wrapper.style.cursor = "pointer";
 
-        if(type == "folder") {
-            this.core.addEventListener('click', () => {
-                electron.readExplorer(this.path, this.color, this.index);
-                electron.recieve((d) => {
-                    console.log(d);
-                }, "read_explorer");
+            electron.readExplorer(this.path, this.color, this.index);
+
+            this.wrapper.addEventListener("click", (e) => {
+                if(this.wrapper.getAttribute("open") === "true") {
+                    this.wrapper.setAttribute("open", false);
+                    this.wrapper.childNodes.forEach(el => {
+                        if(el.classList.contains("secondary-wrapper")) {
+                            el.style.display = "none";
+                        }
+                    });
+                } else {
+                    this.wrapper.setAttribute("open", true);
+                    this.wrapper.childNodes.forEach(el => {
+                        if(el.classList.contains("secondary-wrapper")) {
+                            el.style.display = "flex";
+                        }
+                    });
+                }
             });
         }
+
+        this.icon = elements.create('div');
+        this.icon.classList=`${this.type} explorer-item-icon`;
+        this.main.append(this.icon);
+
+        this.nameEl = elements.create('p');
+        this.nameEl.textContent = name;
+        this.nameEl.style.color = color;
+        this.main.append(this.nameEl);
     }
 }
 
 export default async function ExploreSurface() {
-    electron.readExplorer();
-    electron.recieve((d) => {
-        var colors = Array.from(main.states.possibleColors);
-        d.forEach((e) => {
-            if(colors.length === 0) colors = Array.from(main.states.possibleColors);
-            const index = Math.floor(Math.random() * colors.length);
-            if(e.isMain) {
-                new ExplItem(e.name, e.path, e.color ? e.color : colors[index], e.type, e.type);
+
+    var colors = Array.from(main.states.possibleColors);
+
+    function chooseColor() {
+        var color;
     
-                colors.splice(index, 1);
+        if(colors.length === 0) colors = Array.from(main.states.possibleColors);
+        color = colors[Math.floor(Math.random()*colors.length)];
+        colors.splice(colors.indexOf(color), 1);
+        return color;
+    }
+
+    electron.readExplorer(undefined, undefined, undefined);
+    electron.recieve((a) => {
+        a.forEach(el => {
+            if(el.isMain) {
+                new ExplItem(el.name, chooseColor(), el.type, el.path, el.index, el.isMain);
             } else {
-                const newPar = document.createElement("div");
-
-                newPar.classList.add("inserted-container");
-
-                new ExplItem(e.name, e.path, e.color, e.type, e.type, newPar);
-
-                const ref = main.sidebarContent.children[e.index];
-
-                ref.insertAdjacentElement("afterend", newPar);
-
+                new ExplItem(el.name, el.color, el.type, el.path, el.index, el.isMain);
             }
-
-            
         });
 
-        if(d[0].isMain) {
-            const children = main.sidebarContent.children;
-            for(let i = 0; i < children.length; i++) {
-                children[i].style.display = "none";
-            }
-        }
-        
+        main.sidebarContent.childNodes.forEach(e => {
+            e.style.display = "none";
+        });
     }, "read_explorer");
+   
 }

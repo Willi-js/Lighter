@@ -342,6 +342,8 @@ body {
     gap: 5px;
 }
 
+
+
 .explorer-item {
     font-family: 'Poppins', sans-serif;
     font-size: 12px;
@@ -361,4 +363,28 @@ body {
 
 .explorer-item-icon {
     width: 20px;
+    height: 20px;
+}
+
+.folder {
+    background: url("../icons/folder.svg");
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+.file {
+    background: url("../icons/file.svg");
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+.explorer-item-wrapper {
+    display: flex;
+    flex-direction: column;
+} 
+
+.secondary-wrapper {
+    margin-left: 20px;
 }
