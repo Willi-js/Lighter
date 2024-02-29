@@ -54,6 +54,9 @@ contextBridge.exposeInMainWorld('electron', {
     },
     readExplorer: (d, c, i) => {
         ipcRenderer.invoke('read_explorer', d, c, i);
+    },
+    followLinker: (p) => {
+        ipcRenderer.invoke('follow_linker', p);
     }
 });
 

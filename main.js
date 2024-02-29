@@ -263,27 +263,83 @@ ipcMain.handle('read_explorer', (e, d, c, i) => {
     if(d === undefined) {
         const out = [];
         fs.readdirSync(path.join(__dirname, "./Explorer")).forEach(file => {
-            out.push({
-                name: file,
-                path: path.join(__dirname, "./Explorer/", file),
-                type: fs.statSync(path.join(__dirname, `./Explorer/`, file)).isDirectory() ? "folder" : "file",
-                color: undefined,
-                index: undefined,
-                isMain: true
-            });
+
+            if(file === "linker.link") {
+
+                try {
+                    const linkTo = fs.readFileSync(path.join(d, file), "utf-8");
+
+                    if(linkTo !== "none" && linkTo !== "") {
+
+                        fs.readdirSync(linkTo).forEach(file => {
+    
+                            out.push({
+                                name: file,
+                                path: path.join(linkTo, file),
+                                type: fs.statSync(path.join(linkTo, file)).isDirectory() ? "folder" : "file",
+                                color: undefined,
+                                index: undefined,
+                                isMain: true
+                            });
+    
+                        });
+    
+                    }
+
+                } catch {}
+                
+            } else {
+                out.push({
+                    name: file,
+                    path: path.join(__dirname, "./Explorer/", file),
+                    type: fs.statSync(path.join(__dirname, `./Explorer/`, file)).isDirectory() ? "folder" : "file",
+                    color: undefined,
+                    index: undefined,
+                    isMain: true
+                });
+            }
+            
         });
         e.sender.send('read_explorer', out);
     } else {
         const out = [];
         fs.readdirSync(path.join(d)).forEach(file => {
-            out.push({
-                name: file,
-                path: path.join(d, file),
-                type: fs.statSync(path.join(d, file)).isDirectory() ? "folder" : "file",
-                color: c,
-                index: i,
-                isMain: false
-            });
+
+            if(file === "linker.link") {
+
+                try {
+
+                    const linkTo = fs.readFileSync(path.join(d, file), "utf-8");
+
+                    if(linkTo !== "none" && linkTo !== "") {
+                    
+                        fs.readdirSync(linkTo).forEach(file => {
+                        
+                            out.push({
+                                name: file,
+                                path: path.join(linkTo, file),
+                                type: fs.statSync(path.join(linkTo, file)).isDirectory() ? "folder" : "file",
+                                color: c,
+                                index: i,
+                                isMain: false
+                            });
+                            
+                        });
+                    
+                    }
+
+                } catch {}
+
+            } else {
+                out.push({
+                    name: file,
+                    path: path.join(d, file),
+                    type: fs.statSync(path.join(d, file)).isDirectory() ? "folder" : "file",
+                    color: c,
+                    index: i,
+                    isMain: false
+                });
+            }
         });
         e.sender.send('read_explorer', out);
     }

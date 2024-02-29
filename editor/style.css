@@ -383,6 +383,7 @@ body {
 .explorer-item-wrapper {
     display: flex;
     flex-direction: column;
+    gap: 5px;
 } 
 
 .secondary-wrapper {
