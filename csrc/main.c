@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include "./src/explorer.h"
 //#include "./src/example.h"
 
 int main() {
