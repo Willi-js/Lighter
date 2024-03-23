@@ -169,13 +169,13 @@ function createEditorWindow() {
     editorWindonw.loadFile(path.join(__dirname, './editor/index.html'));
 }
 
-ipcMain.handle("get", (e, key) => {
+ipcMain.handle("get", (e, key, ID) => {
     var ansswer = getKey(key);
 
-    e.sender.send("get", ansswer);
+    e.sender.send("get", ansswer, ID);
 });
 
-ipcMain.handle("update", (e, key, value) => {
+ipcMain.handle("update", (e, key, value, ID) => {
     states[key] = value;
 });
 

@@ -84,13 +84,12 @@ export default class ThumbSelect {
 
                     electron.getTrack(thumb.object.id);
                     electron.recieve((t) => {
-                        console.log(t)
                         t.color = color_button.getAttribute('data-color');
                         electron.updateTrack(thumb.object.id, t);
                     }, "get_track");
 
                     newInputWindow.remove();
-                })
+                });
             }
 
             close.addEventListener('click', () => {
@@ -164,6 +163,13 @@ export default class ThumbSelect {
                 try {
                     thumb.settings.updateTitle(thumb.name);
                 } catch {}
+
+                electron.getTrack(thumb.object.id);
+                electron.recieve((t) => {
+                    t.name = thumb.name;
+                    electron.updateTrack(thumb.object.id, t);
+                }, "get_track");
+
                 newInputWindow.remove();
             });
 
@@ -180,6 +186,11 @@ export default class ThumbSelect {
                     try {
                         thumb.settings.updateTitle(thumb.name);
                     } catch {}
+                    electron.getTrack(thumb.object.id);
+                    electron.recieve((t) => {
+                        t.name = thumb.name;
+                        electron.updateTrack(thumb.object.id, t);
+                    }, "get_track");
                     newInputWindow.remove();
                 }
                 

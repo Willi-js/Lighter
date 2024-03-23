@@ -1,5 +1,6 @@
 import main from "../main.js";
 import library from "./library.js";
+import { complile_play } from "./play.js";
 
 function calculateVolume(audioSegment) {
     let sum = 0;
@@ -42,11 +43,16 @@ function newProjectIinit() {
         }
     });
 
-    electron.get("config");
-    electron.recieve((c) => {
-       const config = JSON.parse(c);
+    const ID = Math.floor(Math.random() * 9999); + 0.1;
+
+    electron.get("config", ID);
+    electron.recieve((c, pID) => {
+
+        if(pID !== ID) return;
+    
+        const config = JSON.parse(c);
        
-       config.tracks.forEach(e => {
+        config.tracks.forEach(e => {
 
             if(!e.color) {
                 e.color = track.background;
@@ -136,7 +142,7 @@ function getEvents() {
     });
     
     main.track_display.addEventListener('scroll', () => {
-        if(main.states.scrollEl === track_display) {
+        if(main.states.scrollEl === main.track_display) {
             main.thumb_container_line.scrollTop = main.track_display.scrollTop;
         }
     });
@@ -155,7 +161,8 @@ function getEvents() {
             main.states.playing = true;
             playbtn.src = '../assets/play-green.svg';
             playbtn.style.rotate = '0deg';
-            vis_play()
+            vis_play();
+            complile_play();
         } else {
             main.states.playing = false;
             playbtn.src = '../assets/play.svg';
@@ -167,7 +174,7 @@ function getEvents() {
         const key = e.key.toLowerCase();
     
         if(key === " ") {
-            if(states.playing === false) {
+            if(main.states.playing === false) {
                 main.states.playing = true;
                 playbtn.src = '../assets/play-green.svg';
                 playbtn.style.rotate = '0deg';

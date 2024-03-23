@@ -5,12 +5,12 @@ const fs = require('fs');
 contextBridge.exposeInMainWorld('electron', {
     newProject: () => ipcRenderer.invoke('new_project'),
     openProject: () => ipcRenderer.invoke('open_project'),
-    get: (key) => {
-        ipcRenderer.invoke('get', key);
+    get: (key, ID) => {
+        ipcRenderer.invoke('get', key, ID);
     },
     recieve: (callback, ch) => {
-        ipcRenderer.on(ch, (e, args) => {
-            callback(args);
+        ipcRenderer.on(ch, (e, args, ID) => {
+            callback(args, ID);
         });
     },
     update: (key, value) => {
