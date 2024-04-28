@@ -51,16 +51,17 @@ function newProjectIinit() {
         if(pID !== ID) return;
     
         const config = JSON.parse(c);
+
+        console.log(config)
        
         config.tracks.forEach(e => {
+
+            const track = new library.Thumb(e.type, e.name, e.color, "load");
 
             if(!e.color) {
                 e.color = track.background;
                 electron.updateTrack(track.id, e);
             }
-
-
-            const track = new library.Thumb(e.type, e.name, e.color, "load");
 
             const visualizerDiv = track.track;
             const pointer = visualizerDiv.getAttribute('data-pointer');
