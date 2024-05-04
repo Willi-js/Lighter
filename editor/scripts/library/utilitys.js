@@ -180,6 +180,7 @@ function getEvents() {
                 playbtn.src = '../assets/play-green.svg';
                 playbtn.style.rotate = '0deg';
                 vis_play();
+                complile_play();
             } else {
                 main.states.playing = false;
                 playbtn.src = '../assets/play.svg';
