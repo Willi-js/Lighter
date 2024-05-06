@@ -9,6 +9,10 @@ const states = {
     plugins: ""
 }
 
+function logger(text) {
+    console.log(`\x1b[37m[\x1b[32m Lighter Log \x1b[37m]: \x1b[35m${text}\x1b[37m`);
+}
+
 function createMainWindow() {
     const mainWindonw = new BrowserWindow({
         title: 'Lighter',
@@ -45,16 +49,16 @@ function createMainWindow() {
                     ]
                 }
 
-                const samples = fs.mkdirSync(path.join(states.projectPath, '/samples'));
-                const config = fs.writeFileSync(path.join(states.projectPath, '/config.json'), JSON.stringify(configs, null, 2));
-                const projectFile = fs.writeFileSync(path.join(states.projectPath, '/project.lighter'),
+                fs.mkdirSync(path.join(states.projectPath, '/samples'));
+                fs.writeFileSync(path.join(states.projectPath, '/config.json'), JSON.stringify(configs, null, 2));
+                fs.writeFileSync(path.join(states.projectPath, '/project.lighter'),
                 `
 sampledata=${states.projectPath}/samples
 configs=${states.projectPath}/config.json
 root=${states.projectPath}
 metadata=${states.projectPath}/metadata
                 `);
-                const meta = fs.mkdirSync(path.join(states.projectPath, '/metadata'));
+                fs.mkdirSync(path.join(states.projectPath, '/metadata'));
 
                 mainWindonw.close();
                 createEditorWindow();
@@ -63,9 +67,27 @@ metadata=${states.projectPath}/metadata
     }
 
     function openProject() {
-        dialog.showOpenDialog(mainWindonw, {properties: ['openDirectory']}).then(res => {
+
+        const filters = [
+            {
+                name: "*",
+                extensions: ['lighter'],
+            }
+        ]
+
+        dialog.showOpenDialog(mainWindonw, {properties: ['openFile'], filters: filters}).then(res => {
             if(!res.canceled) {
-                states.projectPath = res.filePaths[0];
+
+                const filedata = fs.readFileSync(res.filePaths[0], "utf-8").split("\n");
+
+                filedata.forEach(line => {
+                    const split = line.split("=");
+
+                    if(split[0] === "root") {
+                        states.projectPath = split[1];
+                    }
+
+                });
 
                 mainWindonw.close();
                 createEditorWindow();
@@ -175,7 +197,7 @@ ipcMain.handle("get", (e, key, ID) => {
     e.sender.send("get", ansswer, ID);
 });
 
-ipcMain.handle("update", (e, key, value, ID) => {
+ipcMain.handle("update", (e, key, value) => {
     states[key] = value;
 });
 
@@ -212,11 +234,11 @@ ipcMain.handle("add_track", (e, d) => {
     fs.writeFileSync(path.join(states.projectPath, '/config.json'), JSON.stringify(config, null, 2));
 });
 
-ipcMain.handle("process_file", async (e, d) => {
+ipcMain.handle("process_file", async (e, d, ID) => {
     var d = path.join(states.projectPath, '/samples/', d);
     const fileBuffer = fs.readFileSync(d);
 
-    e.sender.send("process_file", JSON.stringify(fileBuffer));
+    e.sender.send("process_file", JSON.stringify(fileBuffer), ID);
 });
 
 ipcMain.handle("open_plugins", () => {
@@ -227,21 +249,21 @@ ipcMain.handle("update_plugins", () => {
     preload(states);
 });
 
-ipcMain.handle("get_plugin_list", e => {
+ipcMain.handle("get_plugin_list", (e, ID) => {
     const plugins = JSON.parse(fs.readFileSync(states.plugins+"/config.json"));
-    e.sender.send("get_plugin_list", plugins.plugins);
+    e.sender.send("get_plugin_list", plugins.plugins, ID);
 });
 
-ipcMain.handle("get_plugins", (e) => {
+ipcMain.handle("get_plugins", (e, ID) => {
     const cnf = JSON.parse(fs.readFileSync(states.plugins+"/config.json"));
 
-    e.sender.send("get_plugins", cnf);
+    e.sender.send("get_plugins", cnf, ID);
 });
 
-ipcMain.handle("get_plugin", (e, p) => {
+ipcMain.handle("get_plugin", (e, p, ID) => {
     const cnf = fs.readFileSync(states.plugins+`/${p}`, "utf-8");
 
-    e.sender.send("get_plugin", cnf);
+    e.sender.send("get_plugin", cnf, ID);
 });
 
 ipcMain.handle("update_plugin", (e, n, d) => {
@@ -250,16 +272,16 @@ ipcMain.handle("update_plugin", (e, n, d) => {
     fs.writeFileSync(states.plugins+"/config.json", JSON.stringify(cnf, null, 2));
 });
 
-ipcMain.handle("get_track", (e, i) => {
+ipcMain.handle("get_track", (e, i, ID) => {
     const config = JSON.parse(getKey("config"));
-    e.sender.send("get_track", config.tracks[i]);
+    e.sender.send("get_track", config.tracks[i], ID);
 });
 
-ipcMain.handle('get_expl_path', (e) => {
-    e.sender.send('get_expl_path', path.join(__dirname, "./Explorer"));
+ipcMain.handle('get_expl_path', (e, ID) => {
+    e.sender.send('get_expl_path', path.join(__dirname, "./Explorer"), ID);
 });
 
-ipcMain.handle('read_explorer', (e, d, c, i) => {
+ipcMain.handle('read_explorer', (e, d, c, i, ID) => {
     if(d === undefined) {
         const out = [];
         fs.readdirSync(path.join(__dirname, "./Explorer")).forEach(file => {
@@ -300,7 +322,7 @@ ipcMain.handle('read_explorer', (e, d, c, i) => {
             }
             
         });
-        e.sender.send('read_explorer', out);
+        e.sender.send('read_explorer', out, ID);
     } else {
         const out = [];
         fs.readdirSync(path.join(d)).forEach(file => {
@@ -341,7 +363,7 @@ ipcMain.handle('read_explorer', (e, d, c, i) => {
                 });
             }
         });
-        e.sender.send('read_explorer', out);
+        e.sender.send('read_explorer', out, ID);
     }
 });
 

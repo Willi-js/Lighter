@@ -56,7 +56,7 @@ class ExplItem {
             this.wrapper.setAttribute("open", false);
             this.main.style.cursor = "pointer";
 
-            electron.readExplorer(this.path, this.color, this.index);
+            electron.readExplorer(this.path, this.color, this.index, 9);
 
             this.main.addEventListener("click", (e) => {
                 if(this.wrapper.getAttribute("open") === "true") {
@@ -94,8 +94,9 @@ export default async function ExploreSurface() {
         return color;
     }
 
-    electron.readExplorer(undefined, undefined, undefined);
-    electron.recieve((a) => {
+    electron.readExplorer(undefined, undefined, undefined, 9);
+    electron.recieve((a, pID) => {
+        if(pID !== 9) return;
         a.forEach(el => {
             if(el.isMain) {
                 new ExplItem(el.name, chooseColor(), el.type, el.path, el.index, el.isMain);

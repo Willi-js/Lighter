@@ -43,16 +43,12 @@ function newProjectIinit() {
         }
     });
 
-    const ID = Math.floor(Math.random() * 9999); + 0.1;
-
-    electron.get("config", ID);
+    electron.get("config", 1);
     electron.recieve((c, pID) => {
 
-        if(pID !== ID) return;
+        if(pID !== 1) return;
     
         const config = JSON.parse(c);
-
-        console.log(config)
        
         config.tracks.forEach(e => {
 
@@ -73,8 +69,10 @@ function newProjectIinit() {
 
             e.samples.forEach(s => {
 
-                electron.processFile(s.sample);
-                electron.recieve((fileBufferrrr) => {
+                electron.processFile(s.sample, 2);
+                electron.recieve((fileBufferrrr, pID) => {
+
+                    if (pID !== 2) return;
 
                     count++;
                     if(count > e.samples.length) return;
@@ -223,8 +221,11 @@ function getVisPlay() {
 }
 
 function parsePlugins() {
-    electron.getPlugins();
-    electron.recieve(d => {
+    electron.getPlugins(3);
+    electron.recieve((d, pID) => {
+
+        if(pID !== 3) return;
+
         const keys = Object.keys(d.plugins);
         const enabled = [];
         keys.forEach(key => {
@@ -237,8 +238,9 @@ function parsePlugins() {
             files.push(d.list[e]);
         });
         files.forEach(key => {
-            electron.getPlugin(key);
-            electron.recieve(da => {
+            electron.getPlugin(key, 4);
+            electron.recieve((da, pID) => {
+                if(pID !== 4) return;
                 const script = document.createElement('script');
                 script.type = "module";
                 script.innerHTML = da;

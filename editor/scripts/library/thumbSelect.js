@@ -82,8 +82,9 @@ export default class ThumbSelect {
                         el.style.backgroundColor = color_button.getAttribute('data-color');
                     });
 
-                    electron.getTrack(thumb.object.id);
-                    electron.recieve((t) => {
+                    electron.getTrack(thumb.object.id, 5);
+                    electron.recieve((t, pID) => {
+                        if(pID != 5) return;
                         t.color = color_button.getAttribute('data-color');
                         electron.updateTrack(thumb.object.id, t);
                     }, "get_track");
@@ -164,8 +165,9 @@ export default class ThumbSelect {
                     thumb.settings.updateTitle(thumb.name);
                 } catch {}
 
-                electron.getTrack(thumb.object.id);
-                electron.recieve((t) => {
+                electron.getTrack(thumb.object.id, 6);
+                electron.recieve((t, pID) => {
+                    if(pID != 6) return;
                     t.name = thumb.name;
                     electron.updateTrack(thumb.object.id, t);
                 }, "get_track");
@@ -186,8 +188,9 @@ export default class ThumbSelect {
                     try {
                         thumb.settings.updateTitle(thumb.name);
                     } catch {}
-                    electron.getTrack(thumb.object.id);
-                    electron.recieve((t) => {
+                    electron.getTrack(thumb.object.id, 7);
+                    electron.recieve((t, pID) => {
+                        if(pID != 7) return;
                         t.name = thumb.name;
                         electron.updateTrack(thumb.object.id, t);
                     }, "get_track");

@@ -25,35 +25,35 @@ contextBridge.exposeInMainWorld('electron', {
     addTrack: (data) => {
         ipcRenderer.invoke('add_track', data);
     },
-    getTrack: (i) => {
-        ipcRenderer.invoke('get_track', i);
+    getTrack: (i, ID) => {
+        ipcRenderer.invoke('get_track', i, ID);
     },
-    processFile: (pathto) => {
-        ipcRenderer.invoke('process_file', pathto);
+    processFile: (pathto, ID) => {
+        ipcRenderer.invoke('process_file', pathto, ID);
     },
     openPlugins: () => {
         ipcRenderer.invoke('open_plugins');
     },
-    getPluginList: () => {
-        ipcRenderer.invoke('get_plugin_list');
+    getPluginList: (ID) => {
+        ipcRenderer.invoke('get_plugin_list', ID);
     },
     updatePlugins: () => {
         ipcRenderer.invoke('update_plugins');
     },
-    getPlugins: () => {
-        ipcRenderer.invoke('get_plugins');
+    getPlugins: (ID) => {
+        ipcRenderer.invoke('get_plugins', ID);
     },
-    getPlugin: (p) => {
-        ipcRenderer.invoke('get_plugin', p);
+    getPlugin: (p, ID) => {
+        ipcRenderer.invoke('get_plugin', p, ID);
     },
     updatePlugin: (name, data) => {
         ipcRenderer.invoke('update_plugin', name, data);
     },
-    getExplPath: () => {
-        ipcRenderer.invoke('get_expl_path');
+    getExplPath: (ID) => {
+        ipcRenderer.invoke('get_expl_path', ID);
     },
-    readExplorer: (d, c, i) => {
-        ipcRenderer.invoke('read_explorer', d, c, i);
+    readExplorer: (d, c, i, ID) => {
+        ipcRenderer.invoke('read_explorer', d, c, i, ID);
     },
     followLinker: (p) => {
         ipcRenderer.invoke('follow_linker', p);

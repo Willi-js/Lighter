@@ -1,6 +1,6 @@
 import main from "../main.js";
 
-const ID = Math.floor(Math.random() * 9999) + 0.2;
+const ID = 8;
 
 export function complile_play() {
     electron.get("config", ID);
