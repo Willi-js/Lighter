@@ -234,11 +234,11 @@ ipcMain.handle("add_track", (e, d) => {
     fs.writeFileSync(path.join(states.projectPath, '/config.json'), JSON.stringify(config, null, 2));
 });
 
-ipcMain.handle("process_file", async (e, d, ID) => {
+ipcMain.handle("process_file", async (e, d, ID, ...other) => {
     var d = path.join(states.projectPath, '/samples/', d);
     const fileBuffer = fs.readFileSync(d);
 
-    e.sender.send("process_file", JSON.stringify(fileBuffer), ID);
+    e.sender.send("process_file", JSON.stringify(fileBuffer), ID, ...other);
 });
 
 ipcMain.handle("open_plugins", () => {

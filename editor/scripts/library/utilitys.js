@@ -45,77 +45,77 @@ function newProjectIinit() {
     });
 
     electron.get("config", 1);
-    electron.recieve((c, pID) => {
-
-        if(pID !== 1) return;
-    
-        const config = JSON.parse(c);
-       
-        config.tracks.forEach(e => {
-
-            const track = new library.Thumb(e.type, e.name, e.color, "load");
-
-            if(!e.color) {
-                e.color = track.background;
-                electron.updateTrack(track.id, e);
-            }
-
-            const visualizerDiv = track.track;
-            const pointer = visualizerDiv.getAttribute('data-pointer');
-            const color = document.getElementById(pointer).getAttribute('data-color');
-
-            if(e.samples.length === 0) return;
-
-            var count = 0
-
-            e.samples.forEach(s => {
-
-                electron.processFile(s.sample, 2);
-                electron.recieve((fileBufferrrr, pID) => {
-
-                    if (pID !== 2) return;
-
-                    count++;
-                    if(count > e.samples.length) return;
-
-                    const fileBuffer = JSON.parse(fileBufferrrr);
-
-                    const arrayBuffer = new Uint8Array(fileBuffer.data).buffer;
-
-                    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-
-                    try { async function a() {
-                            const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
-                            const audioData = audioBuffer.getChannelData(0);
-                    
-                            const sampleRate = audioBuffer.sampleRate;
-                            const duration = audioBuffer.duration;
-                            const interval = main.states.trackSplit;
-                            const volumeData = [];
-                    
-                            for (let i = 0; i < duration; i += interval) {
-                                const startSample = Math.floor(i * sampleRate);
-                                const endSample = Math.floor((i + interval) * sampleRate);
-                                const segment = audioData.slice(startSample, endSample);
-                                const volume = calculateVolume(segment);
-                                volumeData.push(volume);
-                            }
-                    
-                            const vis = new library.Visualiser(track.track, color, "audio", s.place);
-                            vis.drawLine(volumeData);
-                        }
-                        a();
-                    } catch (error) {
-                        console.error('Error decoding audio data:', error);
-                    }
-
-                    
-                }, "process_file");
-            });
-
-       })
-    }, "get");
 }
+
+electron.recieve((c, pID) => {
+
+    if(pID !== 1) return;
+
+    const config = JSON.parse(c);
+   
+    config.tracks.forEach(e => {
+
+        const track = new library.Thumb(e.type, e.name, e.color, "load");
+
+        if(!e.color) {
+            e.color = track.background;
+            electron.updateTrack(track.id, e);
+        }
+
+        const visualizerDiv = track.track;
+        const pointer = visualizerDiv.getAttribute('data-pointer');
+        const color = document.getElementById(pointer).getAttribute('data-color');
+
+        if(e.samples.length === 0) return;
+
+        e.samples.forEach(s => {
+            electron.processFile(s.sample, 2, s, e, color, visualizerDiv.getAttribute("data-pointer"));
+        });
+
+   });
+}, "get");
+
+electron.recieve((fileBufferrrr, pID, other) => {
+    if (pID !== 2) return;
+
+    const sample_dat = other[0];
+    const e = other[1];
+    const color = other[2];
+    const track = document.querySelector(`div[data-pointer="${other[3]}"]`);
+
+    const fileBuffer = JSON.parse(fileBufferrrr);
+
+    const arrayBuffer = new Uint8Array(fileBuffer.data).buffer;
+
+    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
+    try { async function a() {
+            const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+            const audioData = audioBuffer.getChannelData(0);
+    
+            const sampleRate = audioBuffer.sampleRate;
+            const duration = audioBuffer.duration;
+            const interval = main.states.trackSplit;
+            const volumeData = [];
+    
+            for (let i = 0; i < duration; i += interval) {
+                const startSample = Math.floor(i * sampleRate);
+                const endSample = Math.floor((i + interval) * sampleRate);
+                const segment = audioData.slice(startSample, endSample);
+                const volume = calculateVolume(segment);
+                volumeData.push(volume);
+            }      
+
+            const vis = new library.Visualiser(track, color, "audio", sample_dat.place);
+            vis.drawLine(volumeData);
+        }
+        a();
+    } catch (error) {
+        console.error('Error decoding audio data:', error);
+    }
+
+    
+}, "process_file");
 
 function getEvents() {
 
@@ -225,33 +225,35 @@ function getVisPlay() {
 
 function parsePlugins() {
     electron.getPlugins(3);
-    electron.recieve((d, pID) => {
-
-        if(pID !== 3) return;
-
-        const keys = Object.keys(d.plugins);
-        const enabled = [];
-        keys.forEach(key => {
-            if(d.plugins[key] === true) {
-                enabled.push(key);
-            }
-        });
-        const files = [];
-        enabled.forEach(e => {
-            files.push(d.list[e]);
-        });
-        files.forEach(key => {
-            electron.getPlugin(key, 4);
-            electron.recieve((da, pID) => {
-                if(pID !== 4) return;
-                const script = document.createElement('script');
-                script.type = "module";
-                script.innerHTML = da;
-                document.body.appendChild(script);
-            }, "get_plugin");
-        });
-    }, "get_plugins");
 }
+
+electron.recieve((d, pID) => {
+
+    if(pID !== 3) return;
+
+    const keys = Object.keys(d.plugins);
+    const enabled = [];
+    keys.forEach(key => {
+        if(d.plugins[key] === true) {
+            enabled.push(key);
+        }
+    });
+    const files = [];
+    enabled.forEach(e => {
+        files.push(d.list[e]);
+    });
+    files.forEach(key => {
+        electron.getPlugin(key, 4);
+    });
+}, "get_plugins");
+
+electron.recieve((da, pID) => {
+    if(pID !== 4) return;
+    const script = document.createElement('script');
+    script.type = "module";
+    script.innerHTML = da;
+    document.body.appendChild(script);
+}, "get_plugin");
 
 export default {
     calculateVolume,

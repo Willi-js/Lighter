@@ -9,8 +9,8 @@ contextBridge.exposeInMainWorld('electron', {
         ipcRenderer.invoke('get', key, ID);
     },
     recieve: (callback, ch) => {
-        ipcRenderer.on(ch, (e, args, ID) => {
-            callback(args, ID);
+        ipcRenderer.on(ch, (e, args, ID, ...others) => {
+            callback(args, ID, others);
         });
     },
     update: (key, value) => {
@@ -28,8 +28,8 @@ contextBridge.exposeInMainWorld('electron', {
     getTrack: (i, ID) => {
         ipcRenderer.invoke('get_track', i, ID);
     },
-    processFile: (pathto, ID) => {
-        ipcRenderer.invoke('process_file', pathto, ID);
+    processFile: (pathto, ID, ...other) => {
+        ipcRenderer.invoke('process_file', pathto, ID, ...other);
     },
     openPlugins: () => {
         ipcRenderer.invoke('open_plugins');
