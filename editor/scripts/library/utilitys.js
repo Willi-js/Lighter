@@ -1,6 +1,7 @@
 import main from "../main.js";
 import library from "./library.js";
 import { complile_play } from "./play.js";
+import { stopPlay } from "./play.js";
 
 function calculateVolume(audioSegment) {
     let sum = 0;
@@ -166,6 +167,7 @@ function getEvents() {
             main.states.playing = false;
             playbtn.src = '../assets/play.svg';
             playbtn.style.rotate = '90deg';
+            stopPlay();
         }
     });
 
@@ -183,6 +185,7 @@ function getEvents() {
                 main.states.playing = false;
                 playbtn.src = '../assets/play.svg';
                 playbtn.style.rotate = '90deg';
+                stopPlay();
             }
         }
     });
