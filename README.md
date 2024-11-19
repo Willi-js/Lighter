@@ -1,7 +1,5 @@
 # PROJECT DEPRECATED (Will be rewriten some time in the future)
 
-Project moved [here](https://github.com/Willi-js/Lighter-rust)
-
 # Lighter
 
 
